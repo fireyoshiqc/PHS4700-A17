@@ -60,9 +60,8 @@ function centre_de_masse = CentreDeMasse(AngRot, posNL)
   navette_total_volume = navette_cyl_volume + navette_cone_volume;
   
   % Masse des parties de la navette
-  navette_cyl_masse_tonnes = navette_cyl_volume / navette_total_volume * navette_masse_tonnes;
-  navette_cone_masse_tonnes = navette_cone_volume / navette_total_volume * navette_masse_tonnes;
-  disp(navette_cone_masse_tonnes);
+  global navette_cyl_masse_tonnes = navette_cyl_volume / navette_total_volume * navette_masse_tonnes;
+  global navette_cone_masse_tonnes = navette_cone_volume / navette_total_volume * navette_masse_tonnes;
   
   % Volume des parties des propulseurs
   booster_cyl_volume = (pi*booster_cyl_r^2) * booster_cyl_h;
@@ -70,8 +69,8 @@ function centre_de_masse = CentreDeMasse(AngRot, posNL)
   booster_total_volume = booster_cyl_volume + booster_cone_volume;        
   
   % Masse des parties des propulseurs
-  booster_cyl_masse_tonnes = booster_cyl_volume * booster_masse_tonnes / booster_total_volume;
-  booster_cone_masse_tonnes = booster_cone_volume * booster_masse_tonnes / booster_total_volume;
+  global booster_cyl_masse_tonnes = booster_cyl_volume * booster_masse_tonnes / booster_total_volume;
+  global booster_cone_masse_tonnes = booster_cone_volume * booster_masse_tonnes / booster_total_volume;
   
   % Volume des parties du réservoir
   reservoir_cyl_oxygene_volume = (pi*reservoir_cyl_r^2) * reservoir_cyl_h_oxygene;
@@ -79,11 +78,11 @@ function centre_de_masse = CentreDeMasse(AngRot, posNL)
   reservoir_oxygene_total_volume = reservoir_cyl_oxygene_volume + reservoir_cone_volume;
   
   % Masse des parties du réservoir
-  reservoir_cyl_oxygene_masse_tonnes = reservoir_cyl_oxygene_volume * reservoir_masse_tonnes_oxygene / reservoir_oxygene_total_volume; 
-  reservoir_cone_oxygene_masse_tonnes = reservoir_cone_volume * reservoir_masse_tonnes_oxygene / reservoir_oxygene_total_volume;
+  global reservoir_cyl_oxygene_masse_tonnes = reservoir_cyl_oxygene_volume * reservoir_masse_tonnes_oxygene / reservoir_oxygene_total_volume; 
+  global reservoir_cone_oxygene_masse_tonnes = reservoir_cone_volume * reservoir_masse_tonnes_oxygene / reservoir_oxygene_total_volume;
   
   % Masse totale de la fusée
-  masse_totale = reservoir_masse_tonnes_hydrogene + reservoir_masse_tonnes_oxygene + navette_masse_tonnes + booster_masse_tonnes * 2;
+  global masse_totale = reservoir_masse_tonnes_hydrogene + reservoir_masse_tonnes_oxygene + navette_masse_tonnes + booster_masse_tonnes * 2;
   
   % Somme pondérée
   c_de_masse = (navette_cone_c * navette_cone_masse_tonnes + navette_cyl_c * navette_cyl_masse_tonnes +
