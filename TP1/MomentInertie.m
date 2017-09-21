@@ -83,13 +83,12 @@ function momentintertie = MomentInertie(AngRot, posNL)
             
   %display(fusee_I);
   
+  % Ramener dans le système d'axes du laboratoire en appliquant la rotation du système local
   % Matrice de rotation autour de x
   R_x = [1, 0, 0; 0, cos(AngRot), -sin(AngRot); 0, sin(AngRot), cos(AngRot)];
   R_x_inverse = inv(R_x);
   % Appliquer la rotation
   I_rot = R_x * fusee_I * R_x_inverse;
-  %Appliquer la translation
-  momentintertie = I_rot + posNL;
   
 endfunction
 
