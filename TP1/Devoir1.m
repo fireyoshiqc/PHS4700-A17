@@ -3,7 +3,8 @@ function [pcmNL INL alphaNL]=Devoir1(AngRot, vangulaire, forces, posNL)
   main();
   % Centre de masse
   pcmNL = CentreDeMasse(AngRot, posNL);
-  display(pcmNL);
+  % display(pcmNL);
   % Moment inertie
-  INL = MomentInertie();
+  INL = MomentInertie(AngRot, posNL);
+  display(INL);
 endfunction

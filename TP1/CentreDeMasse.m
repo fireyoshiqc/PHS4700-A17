@@ -21,35 +21,35 @@ function centre_de_masse = CentreDeMasse(AngRot, posNL)
   global booster_masse_tonnes;
   
   %Cylindre de la navette
-  navette_cyl_c = [0; 0; navette_cyl_h/2];
+  global navette_cyl_c = [0; 0; navette_cyl_h/2];
   %Cône de la navette
-  navette_cone_c = [0; 0; navette_cyl_h + navette_cone_h/4];
+  global navette_cone_c = [0; 0; navette_cyl_h + navette_cone_h/4];
   
   %Cylindre de la réservoir (2/3 en bas)
-  reservoir_cyl_hydrogene_c = [0; navette_cyl_r + reservoir_cyl_r; reservoir_cyl_h_hydrogene * 1/2];
+  global reservoir_cyl_hydrogene_c = [0; navette_cyl_r + reservoir_cyl_r; reservoir_cyl_h_hydrogene * 1/2];
   %Cylindre de la réservoir (1/3 en haut)
-  reservoir_cyl_oxygene_c = [0; navette_cyl_r + reservoir_cyl_r; reservoir_cyl_h - reservoir_cyl_h_oxygene /2];
+  global reservoir_cyl_oxygene_c = [0; navette_cyl_r + reservoir_cyl_r; reservoir_cyl_h - reservoir_cyl_h_oxygene /2];
   %Cône de la réservoir
-  reservoir_cone_c = [0; navette_cone_r +  reservoir_cone_r; reservoir_cyl_h + reservoir_cone_h/4];
+  global reservoir_cone_c = [0; navette_cone_r +  reservoir_cone_r; reservoir_cyl_h + reservoir_cone_h/4];
 
   % Propulseur gauche
-  booster_cyl_gauche_c = [
+  global booster_cyl_gauche_c = [
     -(reservoir_cyl_r + booster_cyl_r);
     (navette_cyl_r + reservoir_cyl_r);
     booster_cyl_h/2];
 
-  booster_cone_gauche_c = [
+  global booster_cone_gauche_c = [
     -(reservoir_cyl_r + booster_cyl_r);
     (navette_cyl_r + reservoir_cyl_r);
     (booster_cyl_h + booster_cone_h/4)];
 
   % Propulseur droite
-  booster_cyl_droite_c = [
+  global booster_cyl_droite_c = [
     -booster_cyl_gauche_c(1);
     booster_cyl_gauche_c(2);
     booster_cyl_gauche_c(3)];
 
-  booster_cone_droite_c = [
+  global booster_cone_droite_c = [
     -booster_cone_gauche_c(1);
     booster_cone_gauche_c(2);
     booster_cone_gauche_c(3)];
@@ -85,7 +85,7 @@ function centre_de_masse = CentreDeMasse(AngRot, posNL)
   global masse_totale = reservoir_masse_tonnes_hydrogene + reservoir_masse_tonnes_oxygene + navette_masse_tonnes + booster_masse_tonnes * 2;
   
   % Somme pondérée
-  c_de_masse = (navette_cone_c * navette_cone_masse_tonnes + navette_cyl_c * navette_cyl_masse_tonnes +
+  global c_de_masse = (navette_cone_c * navette_cone_masse_tonnes + navette_cyl_c * navette_cyl_masse_tonnes +
                      reservoir_cone_c * reservoir_cone_oxygene_masse_tonnes + reservoir_cyl_hydrogene_c * reservoir_masse_tonnes_hydrogene + 
                      reservoir_cyl_oxygene_c * reservoir_cyl_oxygene_masse_tonnes +
                      (booster_cone_droite_c + booster_cone_gauche_c)* booster_cone_masse_tonnes +
