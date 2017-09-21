@@ -49,15 +49,15 @@ function momentintertie = MomentInertie(AngRot, posNL)
   booster_cyl_I = MomentInertieCyl(booster_cyl_masse_tonnes, booster_cyl_r, booster_cyl_h);
   
   %distance entre les centres de masses des parties et le centre de masse fusee
-  d_reservoir_cone = c_de_masse - reservoir_cone_c;
-  d_reservoir_cyl_oxygene = c_de_masse - reservoir_cyl_oxygene_c;
-  d_reservoir_cyl_hydrogene = c_de_masse - reservoir_cyl_hydrogene_c;
-  d_navette_cone = c_de_masse - navette_cone_c;
-  d_navette_cyl = c_de_masse - navette_cyl_c;
-  d_booster_cyl_gauche = c_de_masse - booster_cyl_gauche_c;
-  d_booster_cyl_droite = c_de_masse - booster_cyl_droite_c;
-  d_booster_cone_gauche = c_de_masse - booster_cone_droite_c;
-  d_booster_cone_droite = c_de_masse - booster_cone_gauche_c;
+  d_reservoir_cone = reservoir_cone_c - c_de_masse;
+  d_reservoir_cyl_oxygene = reservoir_cyl_oxygene_c - c_de_masse;
+  d_reservoir_cyl_hydrogene = reservoir_cyl_hydrogene_c - c_de_masse;
+  d_navette_cone = navette_cone_c - c_de_masse;
+  d_navette_cyl = navette_cyl_c - c_de_masse;
+  d_booster_cyl_gauche = booster_cyl_gauche_c - c_de_masse;
+  d_booster_cyl_droite = booster_cyl_droite_c - c_de_masse;
+  d_booster_cone_gauche = booster_cone_droite_c - c_de_masse;
+  d_booster_cone_droite = booster_cone_gauche_c - c_de_masse;
   
   % Moment inertie par rapport au centre de masse de la fusee
   % reservoir
@@ -94,11 +94,11 @@ function momentintertie = MomentInertie(AngRot, posNL)
 endfunction
 
 function momentinertiecone = MomentInertieCone(m, r, h)
-  momentinertiecone = m * [(12*r^2 + 3*h^2)/80, 0, 0; 0, (12*r^2 + 3*h^2)/80, 0; 0, 0, 3*r^2/10];
+  momentinertiecone = m * [(12*r^2 + 3*h^2)/80, 0, 0; 0, (12*r^2 + 3*h^2)/80, 0; 0, 0, (3*r^2)/10];
 endfunction
 
 function momentinertiecyl = MomentInertieCyl(m, r, h)
-  momentinertiecyl = m * [r^2/4 + h^2/12, 0, 0; 0, r^2/4 + h^2/12, 0; 0, 0, r^2/2];
+  momentinertiecyl = m * [(r^2)/4 + (h^2)/12, 0, 0; 0, (r^2)/4 + (h^2)/12, 0; 0, 0, (r^2)/2];
 endfunction
 
 function matricetranslation = MatriceTranslation(d)
