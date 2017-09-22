@@ -36,17 +36,17 @@ function moment_inertie = MomentInertie(AngRot, posNL)
   
   % Moment inertie locale
   %reservoir (local)
-  reservoir_cone_oxygene_I = MomentInertieCone(reservoir_cone_oxygene_masse_tonnes, reservoir_cone_r, reservoir_cone_h);
-  reservoir_cyl_oxygene_I = MomentInertieCyl(reservoir_cyl_oxygene_masse_tonnes, reservoir_cyl_r, reservoir_cyl_h_oxygene);
-  reservoir_cyl_hydrogene_I = MomentInertieCyl(reservoir_masse_tonnes_hydrogene, reservoir_cyl_r, reservoir_cyl_h_hydrogene);
+  reservoir_cone_oxygene_I = MomentInertieCone(reservoir_cone_oxygene_masse_tonnes * 1000, reservoir_cone_r, reservoir_cone_h);
+  reservoir_cyl_oxygene_I = MomentInertieCyl(reservoir_cyl_oxygene_masse_tonnes * 1000, reservoir_cyl_r, reservoir_cyl_h_oxygene);
+  reservoir_cyl_hydrogene_I = MomentInertieCyl(reservoir_masse_tonnes_hydrogene * 1000, reservoir_cyl_r, reservoir_cyl_h_hydrogene);
   
   %navette(local)
-  navette_cone_I = MomentInertieCone(navette_cone_masse_tonnes, navette_cone_r, navette_cone_h);
-  navette_cyl_I = MomentInertieCyl(navette_cyl_masse_tonnes, navette_cyl_r, navette_cyl_h);
+  navette_cone_I = MomentInertieCone(navette_cone_masse_tonnes * 1000, navette_cone_r, navette_cone_h);
+  navette_cyl_I = MomentInertieCyl(navette_cyl_masse_tonnes * 1000, navette_cyl_r, navette_cyl_h);
   
   %propulseurs(local)
-  booster_cone_I = MomentInertieCone(booster_cone_masse_tonnes, booster_cone_r, booster_cone_h);
-  booster_cyl_I = MomentInertieCyl(booster_cyl_masse_tonnes, booster_cyl_r, booster_cyl_h);
+  booster_cone_I = MomentInertieCone(booster_cone_masse_tonnes * 1000, booster_cone_r, booster_cone_h);
+  booster_cyl_I = MomentInertieCyl(booster_cyl_masse_tonnes * 1000, booster_cyl_r, booster_cyl_h);
   
   %distance entre les centres de masses des parties et le centre de masse fusee
   d_reservoir_cone = reservoir_cone_c - c_de_masse;
@@ -61,34 +61,34 @@ function moment_inertie = MomentInertie(AngRot, posNL)
   
   % Moment inertie par rapport au centre de masse de la fusee
   % reservoir
-  reservoir_cone_I_G = reservoir_cone_oxygene_I +  reservoir_cone_oxygene_masse_tonnes * MatriceTranslation(d_reservoir_cone);  
-  reservoir_cyl_oxygene_I_G = reservoir_cyl_oxygene_I + reservoir_cyl_oxygene_masse_tonnes * MatriceTranslation(d_reservoir_cyl_oxygene);
-  reservoir_cyl_hydrogene_I_G = reservoir_cyl_hydrogene_I + reservoir_masse_tonnes_hydrogene * MatriceTranslation(d_reservoir_cyl_hydrogene);
+  reservoir_cone_I_G = reservoir_cone_oxygene_I +  reservoir_cone_oxygene_masse_tonnes * 1000 * MatriceTranslation(d_reservoir_cone);  
+  reservoir_cyl_oxygene_I_G = reservoir_cyl_oxygene_I + reservoir_cyl_oxygene_masse_tonnes * 1000 * MatriceTranslation(d_reservoir_cyl_oxygene);
+  reservoir_cyl_hydrogene_I_G = reservoir_cyl_hydrogene_I + reservoir_masse_tonnes_hydrogene * 1000 * MatriceTranslation(d_reservoir_cyl_hydrogene);
   
   %navette
-  navette_cone_I_G = navette_cone_I + navette_cone_masse_tonnes * MatriceTranslation(d_navette_cone);
-  navette_cyl_I_G = navette_cyl_I + navette_cyl_masse_tonnes * MatriceTranslation(d_navette_cyl);
+  navette_cone_I_G = navette_cone_I + navette_cone_masse_tonnes * 1000 * MatriceTranslation(d_navette_cone);
+  navette_cyl_I_G = navette_cyl_I + navette_cyl_masse_tonnes * 1000 * MatriceTranslation(d_navette_cyl);
   
   %propulseur 
-  booster_cone_gauche_I_G = booster_cone_I + booster_cone_masse_tonnes * MatriceTranslation(d_booster_cone_gauche);
-  booster_cyl_gauche_I_G = booster_cyl_I + booster_cyl_masse_tonnes * MatriceTranslation(d_booster_cyl_gauche);
-  booster_cone_droite_I_G = booster_cone_I + booster_cone_masse_tonnes * MatriceTranslation(d_booster_cone_droite);
-  booster_cyl_droite_I_G = booster_cyl_I + booster_cyl_masse_tonnes * MatriceTranslation(d_booster_cyl_droite);
+  booster_cone_gauche_I_G = booster_cone_I + booster_cone_masse_tonnes * 1000 * MatriceTranslation(d_booster_cone_gauche);
+  booster_cyl_gauche_I_G = booster_cyl_I + booster_cyl_masse_tonnes * 1000 * MatriceTranslation(d_booster_cyl_gauche);
+  booster_cone_droite_I_G = booster_cone_I + booster_cone_masse_tonnes * 1000 * MatriceTranslation(d_booster_cone_droite);
+  booster_cyl_droite_I_G = booster_cyl_I + booster_cyl_masse_tonnes * 1000 * MatriceTranslation(d_booster_cyl_droite);
   
   % Somme des moments d'inertie
-  global fusee_I = (reservoir_cone_I_G + reservoir_cyl_oxygene_I_G +  reservoir_cyl_hydrogene_I_G +
+  fusee_I = (reservoir_cone_I_G + reservoir_cyl_oxygene_I_G +  reservoir_cyl_hydrogene_I_G +
             navette_cone_I_G + navette_cyl_I_G +
             booster_cone_gauche_I_G + booster_cyl_gauche_I_G +
             booster_cone_droite_I_G + booster_cyl_droite_I_G);
             
-  %display(fusee_I);
+  display(fusee_I);
   
   % Ramener dans le système d'axes du laboratoire en appliquant la rotation du système local
   % Matrice de rotation autour de x
   R_x = [1, 0, 0; 0, cos(AngRot), -sin(AngRot); 0, sin(AngRot), cos(AngRot)];
   R_x_inverse = inv(R_x);
   % Appliquer la rotation
-  moment_inertie = R_x * fusee_I * R_x_inverse;
+  global moment_inertie = R_x * fusee_I * R_x_inverse;
   
 endfunction
 
