@@ -15,10 +15,10 @@ function centre_de_masse = CentreDeMasse(AngRot, posNL)
   global booster_cyl_h;
   global booster_cone_h;
   
-  global navette_masse_tonnes;
-  global reservoir_masse_tonnes_hydrogene;
-  global reservoir_masse_tonnes_oxygene;
-  global booster_masse_tonnes;
+  global navette_masse_kg;
+  global reservoir_masse_kg_hydrogene;
+  global reservoir_masse_kg_oxygene;
+  global booster_masse_kg;
   
   %Cylindre de la navette
   global navette_cyl_c = [0; 0; navette_cyl_h/2];
@@ -60,8 +60,8 @@ function centre_de_masse = CentreDeMasse(AngRot, posNL)
   navette_total_volume = navette_cyl_volume + navette_cone_volume;
   
   % Masse des parties de la navette
-  global navette_cyl_masse_tonnes = navette_cyl_volume / navette_total_volume * navette_masse_tonnes;
-  global navette_cone_masse_tonnes = navette_cone_volume / navette_total_volume * navette_masse_tonnes;
+  global navette_cyl_masse_kg = navette_cyl_volume / navette_total_volume * navette_masse_kg;
+  global navette_cone_masse_kg = navette_cone_volume / navette_total_volume * navette_masse_kg;
   
   % Volume des parties des propulseurs
   booster_cyl_volume = (pi*booster_cyl_r^2) * booster_cyl_h;
@@ -69,8 +69,8 @@ function centre_de_masse = CentreDeMasse(AngRot, posNL)
   booster_total_volume = booster_cyl_volume + booster_cone_volume;        
   
   % Masse des parties des propulseurs
-  global booster_cyl_masse_tonnes = booster_cyl_volume / booster_total_volume * booster_masse_tonnes;
-  global booster_cone_masse_tonnes = booster_cone_volume / booster_total_volume * booster_masse_tonnes;
+  global booster_cyl_masse_kg = booster_cyl_volume / booster_total_volume * booster_masse_kg;
+  global booster_cone_masse_kg = booster_cone_volume / booster_total_volume * booster_masse_kg;
   
   % Volume des parties du réservoir
   reservoir_cyl_oxygene_volume = (pi*reservoir_cyl_r^2) * reservoir_cyl_h_oxygene;
@@ -78,18 +78,18 @@ function centre_de_masse = CentreDeMasse(AngRot, posNL)
   reservoir_oxygene_total_volume = reservoir_cyl_oxygene_volume + reservoir_cone_volume;
   
   % Masse des parties du réservoir
-  global reservoir_cyl_oxygene_masse_tonnes = reservoir_cyl_oxygene_volume / reservoir_oxygene_total_volume * reservoir_masse_tonnes_oxygene; 
-  global reservoir_cone_oxygene_masse_tonnes = reservoir_cone_volume / reservoir_oxygene_total_volume * reservoir_masse_tonnes_oxygene;
+  global reservoir_cyl_oxygene_masse_kg = reservoir_cyl_oxygene_volume / reservoir_oxygene_total_volume * reservoir_masse_kg_oxygene; 
+  global reservoir_cone_oxygene_masse_kg = reservoir_cone_volume / reservoir_oxygene_total_volume * reservoir_masse_kg_oxygene;
   
   % Masse totale de la fusée
-  global masse_totale = reservoir_masse_tonnes_hydrogene + reservoir_masse_tonnes_oxygene + navette_masse_tonnes + booster_masse_tonnes * 2;
+  global masse_totale = reservoir_masse_kg_hydrogene + reservoir_masse_kg_oxygene + navette_masse_kg + booster_masse_kg * 2;
   
   % Somme pondérée
-  global c_de_masse = (navette_cone_c * navette_cone_masse_tonnes + navette_cyl_c * navette_cyl_masse_tonnes +
-                     reservoir_cone_c * reservoir_cone_oxygene_masse_tonnes + reservoir_cyl_hydrogene_c * reservoir_masse_tonnes_hydrogene + 
-                     reservoir_cyl_oxygene_c * reservoir_cyl_oxygene_masse_tonnes +
-                     (booster_cone_droite_c + booster_cone_gauche_c)* booster_cone_masse_tonnes +
-                     (booster_cyl_droite_c + booster_cyl_gauche_c) * booster_cyl_masse_tonnes) / masse_totale;
+  global c_de_masse = (navette_cone_c * navette_cone_masse_kg + navette_cyl_c * navette_cyl_masse_kg +
+                     reservoir_cone_c * reservoir_cone_oxygene_masse_kg + reservoir_cyl_hydrogene_c * reservoir_masse_kg_hydrogene + 
+                     reservoir_cyl_oxygene_c * reservoir_cyl_oxygene_masse_kg +
+                     (booster_cone_droite_c + booster_cone_gauche_c)* booster_cone_masse_kg +
+                     (booster_cyl_droite_c + booster_cyl_gauche_c) * booster_cyl_masse_kg) / masse_totale;
   
   % Matrice de rotation autour de x
   R_x = [1, 0, 0; 0, cos(AngRot), -sin(AngRot); 0, sin(AngRot), cos(AngRot)];
