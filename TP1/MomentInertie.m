@@ -82,14 +82,9 @@ function moment_inertie = MomentInertie(AngRot, posNL)
   % Matrice de rotation autour de x
   R_x = [1, 0, 0; 0, cos(AngRot), -sin(AngRot); 0, sin(AngRot), cos(AngRot)];
   R_x_inverse = inv(R_x);
-  
-  display(R_x);
-  display(R_x_inverse);
 
   % Appliquer la rotation
   global moment_inertie = R_x * fusee_I * R_x_inverse;
-  
-  display(moment_inertie);
     
 endfunction
 

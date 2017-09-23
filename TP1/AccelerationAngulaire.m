@@ -7,7 +7,6 @@ function a_ang = AccelerationAngulaire(AngRot, vangulaire, forces)
   global booster_cyl_r;
   
   moment_cinetique = moment_inertie * vangulaire;
-  display(moment_cinetique);
   
   d_force_booster_gauche = [-reservoir_cyl_r-booster_cyl_r; navette_cyl_r+reservoir_cyl_r; 0] - c_de_masse;
   d_force_booster_droite = [reservoir_cyl_r+booster_cyl_r; navette_cyl_r+reservoir_cyl_r; 0] - c_de_masse;
