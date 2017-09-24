@@ -1,13 +1,14 @@
 function [pcmNL INL alphaNL]=Devoir1(AngRot, vangulaire, forces, posNL)
   format short g
   % Load les valeurs
-  main();
+  constantes = defConstantes();
   % Centre de masse
-  pcmNL = CentreDeMasse(AngRot, posNL);
+  [cm masses] = CentreDeMasse(AngRot, posNL, constantes);
+  pcmNL = cm.laboratoire;
 
   % Moment inertie
-  INL = MomentInertie(AngRot, posNL);
+  INL = MomentInertie(AngRot, posNL, constantes, masses, cm);
   
   % Accélération angulaire
-  alphaNL = AccelerationAngulaire(AngRot, vangulaire, forces);
+  alphaNL = AccelerationAngulaire(AngRot, vangulaire, forces, constantes, cm, INL);
 endfunction
