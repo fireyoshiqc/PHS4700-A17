@@ -10,7 +10,8 @@ constantes = struct(
   'filet',
   struct(
     'h', 0.1525,
-    'larg', 1.83
+    'larg', 1.83,
+    'deborde', 0.1525
   ),
   'balle',
   struct(
@@ -24,6 +25,7 @@ constantes = struct(
     'rho', 1.2,
     'cv', 0.5,
     'cm', 0.29
-  )
+  ),
+  'epsilon', [0.001, 0.001, 0.001]
 );
 endfunction
