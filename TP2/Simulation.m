@@ -1,4 +1,6 @@
 function Simulation()
+  pkg load statistics
+    
   rbi = [
   0.00 0.50 1.10;
   0.00 0.40 1.14;

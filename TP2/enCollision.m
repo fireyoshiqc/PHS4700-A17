@@ -9,6 +9,7 @@ function [collision coup] = enCollision(qs)
   z = qs(6);  
   
   collision = false;
+  coup = -1;
   
   %Cas 0: If ball touches the table on the first side, z = table.h, 0 < y < table.larg, table.long/2 < x < table.long
   if (x < table.long/2)
@@ -35,8 +36,6 @@ function [collision coup] = enCollision(qs)
     coup = 0;
     collision = true;
     return;
-  else 
-    display("No collision");
   end;
   
   % Cas 1: If ball touches the table on the first side, z = table.h, 0 < y < table.larg, 0 < x < table.long/2
@@ -64,14 +63,12 @@ function [collision coup] = enCollision(qs)
     coup = 1;
     collision = true;
     return;
-  else 
-    display("No collision");
   end;
  
  
-  % Cas 2: If ball touches filet, x = table.larg/2, - filet.deborde < y < table.larg + filet.deborde , table.h < z < table.h + filet.h 
+  % Cas 2: If ball touches filet, x = table.long/2, - filet.deborde < y < table.larg + filet.deborde , table.h < z < table.h + filet.h 
 
-  cx = table.l/2;
+  cx = table.long/2;
   
   if (y < -filet.deborde)
     cy = -filet.deborde;
@@ -95,8 +92,6 @@ function [collision coup] = enCollision(qs)
     coup = 2;
     collision = true;
     return;
-  else 
-    display("No collision");
   end;
 
   % Cas 3: If ball touches the floor, z = 0
