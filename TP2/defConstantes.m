@@ -1,6 +1,6 @@
 function constantes = defConstantes()
-# **Toutes les dimensions sont en mètres et les masses en kilogrammes**
-constantes = struct( 
+% **Toutes les dimensions sont en mètres et les masses en kilogrammes**
+constantes = struct(
   'table',
   struct(
     'h', 0.76,

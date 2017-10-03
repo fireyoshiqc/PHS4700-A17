@@ -1,4 +1,4 @@
-function g = g2(q0, t0)
+function g = g2(q0, t0, w0)
   constantes = defConstantes();
   % force gravitationnelle
   f = constantes.balle.m * [0 0 -9.8];

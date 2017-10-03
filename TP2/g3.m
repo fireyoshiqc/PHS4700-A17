@@ -1,4 +1,5 @@
-function g = g3(constantes, q0, w0)
+function g = g3(q0, t0, w0)
+  constantes = defConstantes();
   aire_balle = pi*constantes.balle.r^2;
   f = constantes.balle.m * [0 0 -9.8];
   f = f - (constantes.physiques.rho*constantes.physiques.cv*aire_balle/2)*norm(q0(1:3))*q0(1:3);

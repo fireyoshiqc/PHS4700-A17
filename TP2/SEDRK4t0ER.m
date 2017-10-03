@@ -1,4 +1,4 @@
-function qs = SEDRK4t0ER(q0, t0, tf, epsilon, g)
+function qs = SEDRK4t0ER(q0, t0, tf, w0, epsilon, g)
   % Contrôle d’ erreur pour solution ED avec
   % interpolation de Richardson
   % Equation a resoudre : dq/dt=g(q,t)
@@ -9,10 +9,10 @@ function qs = SEDRK4t0ER(q0, t0, tf, epsilon, g)
   % tf : temps final
   % epsilon : précision pour chaque variable
   % g : membre de droite de ED.
-  
+
   m=1; nbi =1; DeltaT =(tf -t0);
   % Solution avec m=1
-  qs1= SEDRK4t0(q0 ,t0 ,DeltaT, g);
+  qs1= SEDRK4t0(q0 ,t0, w0, DeltaT, g);
   [ conv Err ]= ErrSol(qs1 ,q0 , epsilon );
   qs2=qs1;
   % Iteration avec m >1
@@ -22,7 +22,7 @@ function qs = SEDRK4t0ER(q0, t0, tf, epsilon, g)
     qs2 =q0;t2=t0;
     
     for i=1: nbi
-      qs2 = SEDRK4t0(qs2 ,t2 ,DeltaT, g);
+      qs2 = SEDRK4t0(qs2 ,t2, w0, DeltaT, g);
       t2=t2+ DeltaT ;
     end ;
     

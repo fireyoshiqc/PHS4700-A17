@@ -19,22 +19,16 @@ function Simulation()
   0.00 100.00 0.00;
   0.00 10.00 -100.00];
   
-  %for sim = 1:4
-   % for opt = 1:3
-    %  [coup tf rbf vbf] = Devoir2(opt, rbi(sim,:), vbi(sim,:), wbi(sim,:));
-     % display(strcat("Sim ",num2str(sim)," Option ",num2str(opt)));
-      %display(coup);
-      %display(tf);
-      %display(rbf);
-      %display(vbf);
-    %end
-  %end
-  
-  [coup tf rbf vbf] = Devoir2(2, rbi(1, :), vbi(1, :), wbi(1, :));
-  display(strcat("Sim ",num2str(1)," Option ",num2str(2)));
-  display(coup);
-  display(tf);
-  display(rbf);
-  display(vbf);
+  for opt = 1:3
+    for sim = 1:4
+      name = strcat("Option ",num2str(opt)," Sim ",num2str(sim));
+      [coup tf rbf vbf] = Devoir2(opt, rbi(sim,:), vbi(sim,:), wbi(sim,:), name);
+      display(name);
+      display(coup);
+      display(tf);
+      display(rbf);
+      display(vbf);
+    end
+  end
   
 endfunction
