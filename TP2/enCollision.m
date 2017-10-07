@@ -1,7 +1,7 @@
-function [collision coup posCollision] = enCollision(q0, qs)
+function [collision coup] = enCollision(q0, qs)
+  % Determine si la balle a touche un obstacle a 1mm de precision sur x, y et z
   % Collision: Boolean qui determine si une collision a eu lieu
   % Coup : Le type de collision (1 2 3 4)
-  % posCollision : Point de l'objet (table/filet/sol) ou a eu lieu la collision
 
   constantes = defConstantes();
   table = constantes.table;
@@ -36,7 +36,7 @@ function [collision coup posCollision] = enCollision(q0, qs)
   
   distance = pdist([x, y, z; cx, cy, cz],'euclidean');
   
-  if (distance <= balle.r)
+  if (abs(distance - balle.r) <= norm(constantes.epsilon))
     % Determine la direction ou la balle vient
     if (qs(4) - q0(4) < 0)
       coup = 1; % rate
@@ -45,7 +45,6 @@ function [collision coup posCollision] = enCollision(q0, qs)
     end;
     
     collision = true;
-    posCollision = [cx cy cz];
     return;
   end;
   
@@ -70,7 +69,7 @@ function [collision coup posCollision] = enCollision(q0, qs)
   
   distance = pdist([x, y, z; cx, cy, cz],'euclidean');
   
-  if (distance <= balle.r)
+  if abs(distance - balle.r) <= norm(constantes.epsilon)
     
     % Determine la direction ou la balle vient a partir des x
     if (qs(4) - q0(4) < 0)
@@ -80,7 +79,6 @@ function [collision coup posCollision] = enCollision(q0, qs)
     end;
 
     collision = true;
-    posCollision = [cx cy cz];
     return;
   end;
  
@@ -107,18 +105,16 @@ function [collision coup posCollision] = enCollision(q0, qs)
   
   distance = pdist([x, y, z; cx, cy, cz],'euclidean');
   
-  if (distance <= balle.r)
+  if abs(distance - balle.r) <= norm(constantes.epsilon)
     coup = 2;
     collision = true;
-    posCollision = [cx cy cz];
     return;
   end;
 
   % Cas 3: If ball touches the floor, z = 0
-  if z <= 0
+  if abs(z - balle.r) <= norm(constantes.epsilon)
     collision = true;
     coup = 3;
-    posCollision = [cx cy 0];
     return;
   end
 
