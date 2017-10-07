@@ -18,13 +18,18 @@ function aTraverse = traverse(q0, qs)
   
   pente = [xf yf zf] - [xi yi zi]
   
+  %display("traverse.m");
+  %display(pente);  
+  
   % Table 
   % Vérifie que la balle passe par l'hauteur de la table
   if ((zi >= table.h - (epsilon(3) + balle.r)) && (zf <= table.h + epsilon + balle.r))
     % Trouver l'équation paramétrique de la ligne pour trouver le point où la balle passe à la hauteur de la table 
     % [x y z] = [xi yi zi] + t*[pente_x pente_y pente_z]
     t = (table.h - zi)/pente(3);
-    [x_table y_table z_table] = [xi yi zi] + t * pente;
+    pos_table = [xi yi zi] + t * pente;
+    x_table = pos_table(1);
+    y_table = pos_table(2);
     % Vérifie si ce point fait partie de la table
     if ((x_table > -(epsilon(1) + balle.r)) && (x_table < table.long + epsilon(1) + balle.r) 
       && (y_table > -(epsilon(2) + balle.r)) && (y_table < table.larg + epsilon(2) + balle.r))
@@ -36,11 +41,11 @@ function aTraverse = traverse(q0, qs)
   
   % Filet 
   % Vérifie si la balle a passe par le x du filet 
-  % Balle dans la direction de x0 à x+
-  if ((xf - xi) > 0 && (xi <= table.larg/2 + epsilon(1) + balle.r) && (xf >= table.larg/2 - (epsilon(1) + balle.r)))
+  % Balle dans la direction de x0 à x+ et au dessus de la table
+  if ((zi >= table.h - epsilon(3) - balle.r) && (zf >= table.h - epsilon(3) - balle.r) && (xf - xi) > 0 && (xi <= table.larg/2 + epsilon(1) + balle.r) && (xf >= table.larg/2 - (epsilon(1) + balle.r)))
     xpasse = true;
   % Balle dans la direction de x+ à x0  
-  elseif ((xf - xi) < 0 && (xf <= table.larg/2 + epsilon(1) + balle.r) && (xi >= table.larg/2 - (epsilon(1) + balle.r)))
+  elseif ((zi >= table.h - epsilon(3) - balle.r) && (zf >= table.h - epsilon(3) - balle.r) && (xf - xi) < 0 && (xf <= table.larg/2 + epsilon(1) + balle.r) && (xi >= table.larg/2 - (epsilon(1) + balle.r)))
     xpasse = true;
   else
     xpasse = false;
@@ -49,11 +54,14 @@ function aTraverse = traverse(q0, qs)
   if (xpasse)  
     % Trouver l'équation paramétrique de la ligne pour trouver le point où la balle passe à x = position du filet 
     % [x y z] = [xi yi zi] + t*[pente_x pente_y pente_z]
-    t = (filet.x - xi)/pente(1);
-    [x_filet y_filet z_filet] = [xi yi zi] + t * pente;
+    t = (table.long/2 - xi)/pente(1);
+
+    pos_filet = [xi yi zi] + t * pente;
+    y_filet = pos_filet(2);
+    z_filet = pos_filet(3);
     
     if ((z_filet > table.h - (epsilon(3) + balle.r)) && (z_filet < filet.h + table.h + epsilon(3) + balle.r) 
-      && (y_table > -(filet.deborde + epsilon(2) + balle.r) && (y_table < filet.deborde + table.larg + epsilon(2) + balle.r))
+      && (y_filet > -(filet.deborde + epsilon(2) + balle.r) && (y_filet < filet.deborde + table.larg + epsilon(2) + balle.r)))
       aTraverse = true;
       return;
     end
