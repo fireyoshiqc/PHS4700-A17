@@ -16,45 +16,81 @@ function [coup tf rbf vbf] = Devoir2(option, rbi, vbi, wbi, name)
   end
   
   % Resolution
-  positions = [rbi(1) rbi(2) rbi(3)];
-  DeltaT = 0.001;
+  DeltaT = 0.1;
   t0 = 0;
   tf = t0 + DeltaT; 
-  qs = SEDRK4t0ER(q0, t0, tf, wbi, constantes.epsilon, g);
+  [DeltaT qs] = SEDRK4t0E(q0, t0, tf, wbi, constantes.epsilon, g);
   %display(qs); 
-  [collision coup] = enCollision(q0, qs);
+  aTraverse = traverse(q0, qs);
   
-  while not(collision) 
-    % Add the position to the table for plotting
-    positions = [positions; qs(4:6)];
+  % Determiner l'intervalle de temps où la balle a traverse le filet ou la table
+  while not(aTraverse) 
+    %DeltaT = DeltaT/power(2, m-1);
+    display("Devoir2");
+    display(DeltaT);
     q0 = qs;
     t0 = tf;
     tf = t0 + DeltaT;
-    qs = SEDRK4t0ER(q0, t0, tf, wbi, constantes.epsilon, g);
-    [collision coup] = enCollision(q0, qs);
+    [DeltaT qs] = SEDRK4t0E(q0, t0, tf, wbi, constantes.epsilon, g);
+    aTraverse = traverse(q0, qs);
   end
   
-  % Ajouter le dernier position
-  positions = [positions; qs(4:6)];
+  % Determiner le temps de la collision exact
+  m = 1;
+  q_avantcollision = q0;
+  t_avantcollision = t0;
   
-  rbf = qs(4:6);
-  vbf = qs(1:3);
-
+  % Verifier si la collision a lieu à t(i-1)  
+  [collision coup] = enCollision(q0, qs);
+  % Sinon, Vérifier si la collision a lieu à t(i)
+  if not(collision)
+    [collision coup] = enCollision([rbi(1) rbi(2) rbi(3)], q0);
+  end
   
-  % Find out the exact tf where the collision happens
-  % code here !!!!!! 
+  % Sinon, subdiviser en sous-intervalles et fait la même vérification à chaque sous-intervalle    
+  while not(collision)
+    m = 10 * m;
+    q0 = q_avantcollision;
+    t0 = t_avantcollision;
+    DeltaT = DeltaT/m;
+    for i=1:m 
+      qs = SEDRK4t0(q0, t0, wbi, DeltaT, g);
+      [collision coup] = enCollision(q0, qs);
+      if (collision)
+        break;
+      else
+        tf = t0 + DeltaT;
+        q0 = qs;
+      endif
+    end
+  end 
   
-  % Just for testing ----
-  %qs = q0 + feval(['g', num2str(option)], constantes, q0, wbi)*1;
+  display("Collision detecte a: ", num2str(tf), " seconds", " position: ")
+  display(qs(4:6));
+  display("vitesse: ");
+  display(qs(1:3));
   
+  % Faire le graphe
+  nbi = tf/DeltaT;
+  qsol = zeros(nbi+1, 6);
+  qsol(1, :) = [vbi(1) vbi(2) vbi(3) rbi(1) rbi(2) rbi(3)];
+  positions = [rbi(1) rbi(2) rbi(3)];
+  t0 = 0;
+  for i = i:nbi
+    qsol(i+1, :) = SEDRK4t0(qsol(i, :), t0, wbi, DeltaT, g);
+    t0 = t0 + DeltaT;
+  end 
   
-  %rbf = qs(4:6);
-  %vbf = qs(1:3);
-  %tf = 1;
-  %coup = 0;
-  % ---
+  display("Devoir2 ");
+  display(qsol);
   
-  dessinerTable(constantes, positions, name);
+  rbf = qsol(nbi+1, 4:6);
+  vbf = qsol(nbi+1, 1:3);
+  
+  display("Devoir2 ");
+  display(qsol(:, 4:6));
+  
+  dessinerTable(constantes, qsol(:, 4:6), name);
   
 endfunction
 
