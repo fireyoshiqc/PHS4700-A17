@@ -16,10 +16,7 @@ function aTraverse = traverse(q0, qs)
   balle = constantes.balle;
   epsilon = constantes.epsilon;
   
-  pente = [xf yf zf] - [xi yi zi]
-  
-  %display("traverse.m");
-  %display(pente);  
+  pente = [xf yf zf] - [xi yi zi]; 
   
   % Table 
   % Vérifie que la balle passe par l'hauteur de la table
@@ -42,10 +39,10 @@ function aTraverse = traverse(q0, qs)
   % Filet 
   % Vérifie si la balle a passe par le x du filet 
   % Balle dans la direction de x0 à x+ et au dessus de la table
-  if ((zi >= table.h - epsilon(3) - balle.r) && (zf >= table.h - epsilon(3) - balle.r) && (xf - xi) > 0 && (xi <= table.larg/2 + epsilon(1) + balle.r) && (xf >= table.larg/2 - (epsilon(1) + balle.r)))
+  if ((zi >= table.h - epsilon(3) - balle.r) && (zf >= table.h - epsilon(3) - balle.r) && (xf - xi) > 0 && (xi <= table.long/2 + epsilon(1) + balle.r) && (xf >= table.long/2 - (epsilon(1) + balle.r)))
     xpasse = true;
   % Balle dans la direction de x+ à x0  
-  elseif ((zi >= table.h - epsilon(3) - balle.r) && (zf >= table.h - epsilon(3) - balle.r) && (xf - xi) < 0 && (xf <= table.larg/2 + epsilon(1) + balle.r) && (xi >= table.larg/2 - (epsilon(1) + balle.r)))
+  elseif ((zi >= table.h - epsilon(3) - balle.r) && (zf >= table.h - epsilon(3) - balle.r) && (xf - xi) < 0 && (xf <= table.long/2 + epsilon(1) + balle.r) && (xi >= table.long/2 - (epsilon(1) + balle.r)))
     xpasse = true;
   else
     xpasse = false;
