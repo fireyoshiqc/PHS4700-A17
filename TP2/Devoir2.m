@@ -20,7 +20,6 @@ function [coup tf rbf vbf] = Devoir2(option, rbi, vbi, wbi, name)
   t0 = 0;
   tf = t0 + DeltaT; 
   [DeltaT qs] = SEDRK4t0E(q0, t0, tf, wbi, constantes.epsilon, g);
-  %display(qs); 
   aTraverse = traverse(q0, qs);
   
   % Determiner l'intervalle de temps où la balle a traverse le filet ou la table
@@ -62,13 +61,6 @@ function [coup tf rbf vbf] = Devoir2(option, rbi, vbi, wbi, name)
     end
   end 
   
-  display("Collision detecte a: ");
-  display(tf);
-  display(" position: ");
-  display(qs(4:6));
-  display("vitesse: ");
-  display(qs(1:3));
-  
   % Faire le graphe
   nbi = floor(tf/DeltaT);
   qsol = zeros(nbi+2, 6);
@@ -83,9 +75,6 @@ function [coup tf rbf vbf] = Devoir2(option, rbi, vbi, wbi, name)
   
   rbf = qsol(nbi+1, 4:6);
   vbf = qsol(nbi+1, 1:3);
-  
-  display("Devoir2 ");
-  display(qsol(:, 4:6));
   
   dessinerTable(constantes, qsol(:, 4:6), name);
   
