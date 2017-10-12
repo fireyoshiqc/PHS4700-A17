@@ -93,7 +93,15 @@ function dessinerTable(constantes, positions, name)
   line = plot3(positions(:,1), positions(:,2), positions(:,3), 'Color', [1 0.6 0]);
   set (line(1), "linewidth", 2); 
   patch(x, y, z, c);
-  axis([-1 table.long+1 -1 table.larg+1 0 table.h+1]);
+  if (abs(positions(end,1)) >= table.long + 1)
+    if (positions(1,1) > positions(end,1))
+      axis([positions(end,1) positions(1,1) -1 table.larg+1 0 table.h+1]);
+    else
+      axis([positions(1,1) positions(end,1) -1 table.larg+1 0 table.h+1]);
+    end
+  else
+    axis([-1 table.long+1 -1 table.larg+1 0 table.h+1]);
+  end
   view(3)
   grid on
 endfunction
