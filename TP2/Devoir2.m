@@ -29,37 +29,53 @@ function [coup tf rbf vbf] = Devoir2(option, rbi, vbi, wbi, name)
     tf = t0 + DeltaT;
     [DeltaT qs] = SEDRK4t0E(q0, t0, tf, wbi, constantes.epsilon, g);
     aTraverse = traverse(q0, qs);
-  end
-  
-  % Determiner le temps de la collision exact
-  m = 1;
-  q_avantcollision = q0;
-  t_avantcollision = t0;
-  
-  % Verifier si la collision a lieu à t(i-1)  
-  [collision coup] = enCollision(q0, qs);
-  % Sinon, Vérifier si la collision a lieu à t(i)
-  if not(collision)
-    [collision coup] = enCollision([rbi(1) rbi(2) rbi(3)], q0);
-  end
-  
-  % Sinon, subdiviser en sous-intervalles et fait la même vérification à chaque sous-intervalle    
-  while not(collision)
-    m = 10 * m;
-    q0 = q_avantcollision;
-    t0 = t_avantcollision;
-    DeltaT = DeltaT/m;
-    for i=1:m 
-      qs = SEDRK4t0(q0, t0, wbi, DeltaT, g);
+    if (aTraverse)
+      % Determiner le temps de la collision exact
+      m = 1;
+      q_avantcollision = q0;
+      t_avantcollision = t0;
+      t_aprescollision = tf;
+
+      % Verifier si la collision a lieu à t(i-1)  
       [collision coup] = enCollision(q0, qs);
-      if (collision)
-        break;
-      else
-        tf = t0 + DeltaT;
-        q0 = qs;
-      endif
-    end
-  end 
+      % Sinon, Vérifier si la collision a lieu à t(i)
+      if not(collision)
+        [collision coup] = enCollision([rbi(1) rbi(2) rbi(3)], q0);
+      end
+
+      % Sinon, subdiviser en sous-intervalles et fait la même vérification à chaque sous-intervalle    
+      while not(collision)
+        m = 10 * m;
+        q0 = q_avantcollision;
+        t0 = t_avantcollision;
+        DeltaT = DeltaT/m;
+        qsi = q0;
+        excesPrecision = true
+        for i=1:m
+          qsi = q0;
+          qs = SEDRK4t0(q0, t0, wbi, DeltaT, g);
+          [collision coup] = enCollision(q0, qs);
+          if (excesPrecision & norm(qs-qsi) > constantes.epsilon(1))
+            excesPrecision = false
+          end
+          if (collision)
+            break;
+          else
+            t0 = t0 + DeltaT;
+            q0 = qs;
+            tf = t0;
+          endif
+        end
+        if (excesPrecision)
+          aTraverse = false;
+          break; % Aucune collision n'a été trouvée et le déplacement est inférieur à l'erreur permise.
+          % Signifie probablement que la traverse indiquait un faux positif (ex. balle qui frôle le filet).
+        end
+      end 
+    end 
+  end
+  
+
   
   % Faire le graphe
   nbi = floor(tf/DeltaT);
