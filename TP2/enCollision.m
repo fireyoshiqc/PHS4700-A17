@@ -1,7 +1,7 @@
 function [collision coup] = enCollision(q0, qs)
   % Determine si la balle a touche un obstacle a 1mm de precision sur x, y et z
   % Collision: Boolean qui determine si une collision a eu lieu
-  % Coup : Le type de collision (1 2 3 4)
+  % Coup : Le type de collision (0 1 2 3)
 
   constantes = defConstantes();
   table = constantes.table;

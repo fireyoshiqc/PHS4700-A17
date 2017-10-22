@@ -1,4 +1,4 @@
-function [coup tf rbf vbf] = Devoir2(option, rbi, vbi, wbi, name)
+function [coup tf rbf vbf] = Devoir2(option, rbi, vbi, wbi, name = "Graphique de la trajectoire")
   format short g
   
   % Load les valeurs
