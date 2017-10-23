@@ -60,6 +60,7 @@ function [coup tf rbf vbf] = Devoir2(option, rbi, vbi, wbi, name = "Graphique de
             excesPrecision = false;
           end
           if (collision)
+            tf = t0 + DeltaT;
             break;
           else
             t0 = t0 + DeltaT;
