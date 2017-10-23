@@ -36,7 +36,7 @@ function [collision coup] = enCollision(q0, qs)
   
   distance = pdist([x, y, z; cx, cy, cz],'euclidean');
   
-  if (abs(distance - balle.r) <= norm(constantes.epsilon))
+  if (abs(distance - balle.r) <= constantes.epsilon(1))
     % Determine la direction ou la balle vient
     if (qs(4) - q0(4) < 0)
       coup = 1; % rate
@@ -69,7 +69,7 @@ function [collision coup] = enCollision(q0, qs)
   
   distance = pdist([x, y, z; cx, cy, cz],'euclidean');
   
-  if abs(distance - balle.r) <= norm(constantes.epsilon)
+  if abs(distance - balle.r) <= constantes.epsilon(1)
     
     % Determine la direction ou la balle vient a partir des x
     if (qs(4) - q0(4) < 0)
@@ -105,14 +105,14 @@ function [collision coup] = enCollision(q0, qs)
   
   distance = pdist([x, y, z; cx, cy, cz],'euclidean');
   
-  if abs(distance - balle.r) <= norm(constantes.epsilon)
+  if abs(distance - balle.r) <= constantes.epsilon(1)
     coup = 2;
     collision = true;
     return;
   end;
 
   % Cas 3: If ball touches the floor, z = 0
-  if abs(z - balle.r) <= norm(constantes.epsilon)
+  if abs(z - balle.r) <= constantes.epsilon(1)
     collision = true;
     coup = 3;
     return;
