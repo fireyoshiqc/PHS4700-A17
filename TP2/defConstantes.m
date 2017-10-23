@@ -4,7 +4,7 @@ constantes = struct(
   'table',
   struct(
     'h', 0.76,
-    'long', 2.76,
+    'long', 2.74,
     'larg', 1.525
   ),
   'filet',
