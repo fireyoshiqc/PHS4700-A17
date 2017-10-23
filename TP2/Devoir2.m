@@ -43,7 +43,8 @@ function [coup tf rbf vbf] = Devoir2(option, rbi, vbi, wbi, name = "Graphique de
         [collision coup] = enCollision([rbi(1) rbi(2) rbi(3)], q0);
       end
 
-      % Sinon, subdiviser en sous-intervalles et fait la même vérification à chaque sous-intervalle    
+      % Sinon, subdiviser en sous-intervalles et fait la même vérification à chaque sous-intervalle
+      DeltaT_i = DeltaT;  
       while not(collision)
         m = 10 * m;
         q0 = q_avantcollision;
@@ -68,6 +69,7 @@ function [coup tf rbf vbf] = Devoir2(option, rbi, vbi, wbi, name = "Graphique de
         end
         if (excesPrecision)
           aTraverse = false;
+          DeltaT = DeltaT_i; % Restaurer le DeltaT pré-collision
           break; % Aucune collision n'a été trouvée et le déplacement est inférieur à l'erreur permise.
           % Signifie probablement que la traverse indiquait un faux positif (ex. balle qui frôle le filet).
         end
