@@ -50,13 +50,13 @@ function [coup tf rbf vbf] = Devoir2(option, rbi, vbi, wbi, name = "Graphique de
         t0 = t_avantcollision;
         DeltaT = DeltaT/m;
         qsi = q0;
-        excesPrecision = true
+        excesPrecision = true;
         for i=1:m
           qsi = q0;
           qs = SEDRK4t0(q0, t0, wbi, DeltaT, g);
           [collision coup] = enCollision(q0, qs);
           if (excesPrecision & norm(qs-qsi) > constantes.epsilon(1))
-            excesPrecision = false
+            excesPrecision = false;
           end
           if (collision)
             break;
@@ -75,7 +75,6 @@ function [coup tf rbf vbf] = Devoir2(option, rbi, vbi, wbi, name = "Graphique de
     end 
   end
   
-
   
   % Faire le graphe
   nbi = floor(tf/DeltaT);
@@ -89,8 +88,8 @@ function [coup tf rbf vbf] = Devoir2(option, rbi, vbi, wbi, name = "Graphique de
     t0 = t0 + DeltaT;
   end 
   
-  rbf = qsol(nbi+1, 4:6);
-  vbf = qsol(nbi+1, 1:3);
+  rbf = qsol(nbi+2, 4:6);
+  vbf = qsol(nbi+2, 1:3);
   
   dessinerTable(constantes, qsol(:, 4:6), name);
   
