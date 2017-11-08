@@ -43,7 +43,7 @@ function Simulation()
   
   for sim = 1:6
     name = strcat(" Sim ", num2str(sim));
-    [Coll tf raf vaf rbf vbf] = Devoir3(rai(sim,:), vai(sim,:), rbi(sim,:), vbi(sim,:), tb(sim,:));
+    [Coll tf raf vaf rbf vbf] = Devoir3(rai(sim,:), vai(sim,:), rbi(sim,:), vbi(sim,:), tb(sim,:), name);
     display(Coll);
     display(tf);
     display(raf);

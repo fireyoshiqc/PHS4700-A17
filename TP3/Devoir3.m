@@ -1,4 +1,4 @@
-function [Coll tf raf vaf rbf vbf] = Devoir3(rai, vai, rbi, vbi, tb)
+function [Coll tf raf vaf rbf vbf] = Devoir3(rai, vai, rbi, vbi, tb, name = "Graphique de la trajectoire")
   format short g
   
   constantes = defConstantes();
@@ -36,7 +36,7 @@ function [Coll tf raf vaf rbf vbf] = Devoir3(rai, vai, rbi, vbi, tb)
       # Vérifier s'il y a eu potentielle collision, sinon la boucle va continuer normalement.
     else
       [dta qas] = SEDRK4t0E(qa0, curT, curT + deltaT, wa0, epsilon, @gfrt, a.masse);
-      [dtb qas] = SEDRK4t0E(qb0, curT, curT + deltaT, wb0, epsilon, @gfrt, b.masse);
+      [dtb qbs] = SEDRK4t0E(qb0, curT, curT + deltaT, wb0, epsilon, @gfrt, b.masse);
       deltaT = min(dta, dtb);
       rota = rota + wa0*deltaT;
       rotb = rotb + wb0*deltaT;
