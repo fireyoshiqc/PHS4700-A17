@@ -6,7 +6,7 @@ function g = gfrt(q0, m) % m est la masse de l'auto pour laquelle on calcule
     mu = 0.15*(1-(norm(v)/100));
   endif
   % Force de frottement
-  f_frottement = -mu*norm(v)*m*g*(v/norm(v));
+  f_frottement = -mu*m*g*(v/norm(v));
   % F = ma
   a = f_frottement/m;
   g = [a q0(1:2)];

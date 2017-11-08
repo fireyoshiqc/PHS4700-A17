@@ -14,8 +14,10 @@ function [Coll tf raf vaf rbf vbf] = Devoir3(rai, vai, rbi, vbi, tb, name = "Gra
   qbs = qb0;
   wa0 = vai(3);
   wb0 = vbi(3);
-  rota = atan2(vai(2), vai(1));
-  rotb = atan2(vbi(2), vbi(1));
+  rota0 = atan2(vai(2), vai(1));
+  rotb0 = atan2(vbi(2), vbi(1));
+  rota = rota0;
+  rotb = rotb0;
   
   
   collision = false;
@@ -24,19 +26,17 @@ function [Coll tf raf vaf rbf vbf] = Devoir3(rai, vai, rbi, vbi, tb, name = "Gra
   curT = 0.0;
   
   while ((norm(qas(1:2)) > 0.01 || norm(qbs(1:2)) > 0.01) && not(collision))
-    qa0 = qas;
-    qb0 = qbs;
     
     if tb > 0.0 && curT < tb
-      [deltaT qas] = SEDRK4t0E(qa0, curT, curT + deltaT, wa0, epsilon, @gfrt, a.masse);
+      [deltaT qas] = SEDRK4t0E(qas, curT, curT + deltaT, wa0, epsilon, @gfrt, a.masse);
       rota = rota + wa0*tb;
-      qbs = qb0+gcst(qb0)*tb;
+      qbs = qbs+gcst(qbs)*tb;
       # L'auto b ne tourne pas encore sur elle-même.
       curT = tb;
       # Vérifier s'il y a eu potentielle collision, sinon la boucle va continuer normalement.
     else
-      [dta qas] = SEDRK4t0E(qa0, curT, curT + deltaT, wa0, epsilon, @gfrt, a.masse);
-      [dtb qbs] = SEDRK4t0E(qb0, curT, curT + deltaT, wb0, epsilon, @gfrt, b.masse);
+      [dta qas] = SEDRK4t0E(qas, curT, curT + deltaT, wa0, epsilon, @gfrt, a.masse);
+      [dtb qbs] = SEDRK4t0E(qbs, curT, curT + deltaT, wb0, epsilon, @gfrt, b.masse);
       curT = curT + deltaT;
       deltaT = min(dta, dtb);
       rota = rota + wa0*deltaT;
@@ -53,24 +53,37 @@ function [Coll tf raf vaf rbf vbf] = Devoir3(rai, vai, rbi, vbi, tb, name = "Gra
   rbf = qbs(3:4);
   Coll = 1;
   tf = curT;
-  dessinerGraphique(constantes, 0, 'MASTRING');
+  dessinerGraphique(constantes, [rai; raf; rbi; rbf], [rota0 rota rotb0 rotb], 'MASTRING');
   
 endfunction
 
-function dessinerGraphique(constantes, positions, name)
-  voitureA = constantes.autos.a;
-  voitureB = constantes.autos.b;
+function dessinerGraphique(constantes, positions, rotations, name)
+  a = constantes.autos.a;
+  b = constantes.autos.b;
   
   figure('name', name);
-  line = plot(10,20,"-b",20,30,"-r");
-  set (line(1), "linewidth", 2); 
-  verticesA = [0 0; 5 0; 5 1.5; 0 1.5];
+  line = plot(positions(1:2,1), positions(1:2,2),"-b",positions(3:4,1), positions(3:4,2),"-r");
+  set (line(1:2), "linewidth", 3);
+  recA = [-a.long/2 -a.larg/2; a.long/2 -a.larg/2; a.long/2 a.larg/2; -a.long/2 a.larg/2];
+  recB = [-b.long/2 -b.larg/2; b.long/2 -b.larg/2; b.long/2 b.larg/2; -b.long/2 b.larg/2];
+  pointsA0 = R(recA, rotations(1)) + positions(1,:);
+  pointsAF = R(recA, rotations(2)) + positions(2,:);
+  pointsB0 = R(recB, rotations(3)) + positions(3,:);
+  pointsBF = R(recB, rotations(4)) + positions(4,:);
+
   faceA = [1 2 3 4];
-  patch('Faces',faceA,'Vertices',verticesA,'EdgeColor',"blue",'FaceColor',"none",'LineWidth',2);
-  verticesB = [4 4; 9 4; 9 5.5; 4 5.5];
+  patch('Faces',faceA,'Vertices',pointsA0,'EdgeColor',"blue",'FaceColor',"none",'LineWidth',2);
+  patch('Faces',faceA,'Vertices',pointsAF,'EdgeColor',"blue",'FaceColor',"none",'LineWidth',2);
+
   faceB = [1 2 3 4];
-  patch('Faces',faceB,'Vertices',verticesB,'EdgeColor',"red",'FaceColor',"none",'LineWidth',2);
+  patch('Faces',faceB,'Vertices',pointsB0,'EdgeColor',"red",'FaceColor',"none",'LineWidth',2);
+  patch('Faces',faceB,'Vertices',pointsBF,'EdgeColor',"red",'FaceColor',"none",'LineWidth',2);
   axis([0,100,0,100]);
   view(2);
   grid on;
+endfunction
+
+function R = R(points, angle)
+  rot = [cos(angle), -sin(angle); sin(angle), cos(angle)];
+  R = (rot*points')';
 endfunction
