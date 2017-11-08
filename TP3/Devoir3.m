@@ -23,27 +23,37 @@ function [Coll tf raf vaf rbf vbf] = Devoir3(rai, vai, rbi, vbi, tb, name = "Gra
   deltaT = 0.1;
   curT = 0.0;
   
-  while (norm(qas(1:2)) > 0.01 || norm(qbs(1:2) > 0.01)) && not(collision)
+  while ((norm(qas(1:2)) > 0.01 || norm(qbs(1:2)) > 0.01) && not(collision))
     qa0 = qas;
     qb0 = qbs;
     
     if tb > 0.0 && curT < tb
       [deltaT qas] = SEDRK4t0E(qa0, curT, curT + deltaT, wa0, epsilon, @gfrt, a.masse);
       rota = rota + wa0*tb;
-      qbs = gcst(qb0, tb);
+      qbs = qb0+gcst(qb0)*tb;
       # L'auto b ne tourne pas encore sur elle-même.
       curT = tb;
       # Vérifier s'il y a eu potentielle collision, sinon la boucle va continuer normalement.
     else
       [dta qas] = SEDRK4t0E(qa0, curT, curT + deltaT, wa0, epsilon, @gfrt, a.masse);
       [dtb qbs] = SEDRK4t0E(qb0, curT, curT + deltaT, wb0, epsilon, @gfrt, b.masse);
+      curT = curT + deltaT;
       deltaT = min(dta, dtb);
       rota = rota + wa0*deltaT;
       rotb = rotb + wb0*deltaT;
+      # Vérifier s'il y a eu potentielle collision, sinon la boucle va continuer normalement.
     endif
   endwhile
   
   #[vaf vbf waf wbf] = resCollision(qai, qbi, wai, wbi, normale, pointCollision);
+  # Temporaire :
+  vaf = [qas(1:2) wa0];
+  vbf = [qbs(1:2) wb0];
+  raf = qas(3:4);
+  rbf = qbs(3:4);
+  Coll = 1;
+  tf = curT;
+  dessinerGraphique(constantes, 0, 'MASTRING');
   
 endfunction
 
@@ -51,17 +61,16 @@ function dessinerGraphique(constantes, positions, name)
   voitureA = constantes.autos.a;
   voitureB = constantes.autos.b;
   
-  c = [["blue" "red"]];
   figure('name', name);
-  line = plot(10,20,"-b",20,30,"-r")
+  line = plot(10,20,"-b",20,30,"-r");
   set (line(1), "linewidth", 2); 
-  verticesA = [0 0; 1 0; 1 1; 0 1];
-  faceA = [1 2 3 4]
-  patch('Faces',faceA,'Vertices',verticesA,'FaceColor', "blue");
-  verticesB = [4 5; 5 5; 5 4; 4 4];
-  faceB = [1 2 3 4]
-  patch('Faces',faceB,'Vertices',verticesB,'FaceColor', "red");
-  axis([0,100,0,100])
-  view(2)
-  grid on
+  verticesA = [0 0; 5 0; 5 1.5; 0 1.5];
+  faceA = [1 2 3 4];
+  patch('Faces',faceA,'Vertices',verticesA,'EdgeColor',"blue",'FaceColor',"none",'LineWidth',2);
+  verticesB = [4 4; 9 4; 9 5.5; 4 5.5];
+  faceB = [1 2 3 4];
+  patch('Faces',faceB,'Vertices',verticesB,'EdgeColor',"red",'FaceColor',"none",'LineWidth',2);
+  axis([0,100,0,100]);
+  view(2);
+  grid on;
 endfunction

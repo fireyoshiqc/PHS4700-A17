@@ -13,6 +13,6 @@ function [vaf vbf waf wbf] = resCollision(qai, qbi, wai, wbi, normale, pointColl
   
   vaf = vai + normale*j / a.masse;
   vbf = vbi - normale*j / b.masse;
-  waf = wai + j*inv(Ia)*(cross(rap, normale));
-  wbf = wbi - j*inv(Ib)*(cross(rbp, normale));
+  waf = wai + j*(1/Ia)*(cross(rap, normale));
+  wbf = wbi - j*(1/Ib)*(cross(rbp, normale));
 endfunction

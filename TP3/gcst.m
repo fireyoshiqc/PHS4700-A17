@@ -1,3 +1,3 @@
-function g = gcst(q0, deltaT)
-  g = [0 0 0 q0(1:2)*deltaT];
+function g = gcst(q0)
+  g = [0 0 q0(1:2)];
 endfunction
