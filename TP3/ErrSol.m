@@ -1,4 +1,4 @@
-function [ conv Err ]= ErrSol (qs1 ,qs0 , epsilon )
+function [ conv Err ]= ErrSol (qs1 , qs0, epsilon)
   % Verification si solution convergee
   % conv : variable logique pour convergence
   % Err < epsilon pour chaque elements
@@ -9,6 +9,6 @@ function [ conv Err ]= ErrSol (qs1 ,qs0 , epsilon )
   Err =( qs1 -qs0 );
   conv =1;
   % Vérifier la position
-  for i=4:6
-    conv =conv & abs(Err (i)) < epsilon (i-3);
+  for i=3:4
+    conv =conv & abs(Err (i)) < epsilon;
   end

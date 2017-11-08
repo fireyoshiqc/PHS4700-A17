@@ -1,4 +1,4 @@
-function [DeltaT qs] = SEDRK4t0E(q0, t0, tf, w0, epsilon, g)
+function [DeltaT qs] = SEDRK4t0E(q0, t0, tf, w0, epsilon, g, masse)
   % Contrôle d’ erreur pour solution ED 
   % Equation a resoudre : dq/dt=g(q,t)
   % avec
@@ -12,7 +12,7 @@ function [DeltaT qs] = SEDRK4t0E(q0, t0, tf, w0, epsilon, g)
   m=1; nbi =1; DeltaT =(tf -t0);
 
   % Solution avec m=1
-  qs1= SEDRK4t0(q0 ,t0, w0, DeltaT, g);
+  qs1= SEDRK4t0(q0 ,t0, w0, DeltaT, g, masse);
   [ conv Err ]= ErrSol(qs1 ,q0 , epsilon );
   qs2=qs1;
   % Iteration avec m >1
@@ -22,7 +22,7 @@ function [DeltaT qs] = SEDRK4t0E(q0, t0, tf, w0, epsilon, g)
     qs2 =q0;t2=t0;
     
     for i=1: nbi
-      qs2 = SEDRK4t0(qs2 ,t2, w0, DeltaT, g);
+      qs2 = SEDRK4t0(qs2 ,t2, w0, DeltaT, g, masse);
       t2=t2+ DeltaT ;
     end ;
     
