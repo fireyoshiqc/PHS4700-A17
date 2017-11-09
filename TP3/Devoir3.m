@@ -48,15 +48,18 @@ function [Coll tf raf vaf rbf vbf] = Devoir3(rai, vai, rbi, vbi, tb, name = "Gra
     endif
   endwhile
   
-  #[vaf vbf waf wbf] = resCollision(qai, qbi, wai, wbi, normale, pointCollision);
-  # Temporaire :
-  vaf = [qas(1:2) wa0];
-  vbf = [qbs(1:2) wb0];
-  raf = qas(3:4);
-  rbf = qbs(3:4);
-  Coll = 1;
+  if collision
+    [vaf vbf waf wbf] = resCollision(qas, qbs, wa0, wb0, normale, pointCollision);
+  else
+    vaf = [qas(1:2) wa0];
+    vbf = [qbs(1:2) wb0];
+  endif 
+  
+  raf = [qas(3:4) rota];
+  rbf = [qbs(3:4) rotb];
+  Coll = not(collision);
   tf = curT;
-  dessinerGraphique(constantes, [rai; raf; rbi; rbf], [rota0 rota rotb0 rotb], 'MASTRING');
+  dessinerGraphique(constantes, [rai; raf(1:2); rbi; rbf(1:2)], [rota0 rota rotb0 rotb], 'MASTRING');
   
 endfunction
 

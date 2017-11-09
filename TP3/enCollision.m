@@ -27,15 +27,6 @@ function [estEnCollision coinEnCollision surfaceEnCollision] = enCollision(posCe
   coinsAvecRotB = R(coinsSansRotB, orientationXYAutoB);
   coinsTransB = [coinsAvecRotB(:,1) + posCentreAutoB(1:2), coinsAvecRotB(:,2) + posCentreAutoB(1:2), coinsAvecRotB(:,3) + posCentreAutoB(1:2), coinsAvecRotB(:,4) + posCentreAutoB(1:2) ];
   
-  
-#  faceA = [1 2 3 4];
-#  patch('Faces',faceA,'Vertices',transpose(coinsTransA),'EdgeColor',"blue",'FaceColor',"none",'LineWidth',2);
-#  faceB = [1 2 3 4];
-#  patch('Faces',faceB,'Vertices',transpose(coinsTransB),'EdgeColor',"red",'FaceColor',"none",'LineWidth',2);
-#  axis([0,100,0,100]);
-#  view(2);
-#  grid on;
-  
   # Déterminer les normales des 4 surfaces
   normalesA = [normale(coinsTransA(:,1), coinsTransA(:,2)), normale(coinsTransA(:,2), coinsTransA(:,3)), normale(coinsTransA(:,3), coinsTransA(:,4)), normale(coinsAvecRotA(:,4), coinsAvecRotA(:,1))];
   normalesB = [normale(coinsTransB(:,1), coinsTransB(:,2)), normale(coinsTransB(:,2), coinsTransB(:,3)), normale(coinsTransB(:,3), coinsTransB(:,4)), normale(coinsAvecRotB(:,4), coinsAvecRotB(:,1))];
@@ -67,7 +58,8 @@ function [estEnCollision coinEnCollision surfaceEnCollision] = enCollision(posCe
         #display(nnz(coinsASurfaceB(:, col) > 0));
         if nnz(coinsASurfaceB(:, col) > 0) == 3 # les 3 autres coins de A sont au-dessus de surface col de B
           surfaceEnCollision = -normalesB(:,col);
-          #display(strcat("Coin A" , num2str(row) , " en collision avec une surface B" + num2str(col)));
+          display(strcat("Coin A" , num2str(row) , " en collision avec une surface B",  num2str(col)));
+          display(coinsASurfaceB(row, col));
           return;
         endif      
       endfor 
@@ -101,7 +93,8 @@ function [estEnCollision coinEnCollision surfaceEnCollision] = enCollision(posCe
         #display(nnz(coinsBSurfaceA(:, col) > 0));
         if nnz(coinsBSurfaceA(:, col) > 0) == 3 # les 3 autres coins de B sont au-dessus de surface col de A
           surfaceEnCollision = -normalesA(:,col);
-          #display(strcat("Coin B" , num2str(row) , " en collision avec une surface A", num2str(col)));
+          display(coinsBSurfaceA(row, col));
+          display(strcat("Coin B" , num2str(row) , " en collision avec une surface A", num2str(col)));
           return;
         endif      
       endfor 
