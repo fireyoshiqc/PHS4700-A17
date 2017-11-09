@@ -25,7 +25,7 @@ function [Coll tf raf vaf rbf vbf] = Devoir3(rai, vai, rbi, vbi, tb, name = "Gra
   deltaT = 0.1;
   curT = 0.0;
   
-  while ((norm(qas(1:2)) > 0.01 || norm(qbs(1:2)) > 0.01) && not(collision))
+  while ((norm(qas(1:2)) >= 0.01 || norm(qbs(1:2)) >= 0.01) && not(collision))
   #while ((curT < tb) && not(collision))
     # Pas de collision déterminée expérimentalement dans cette section
     if tb > 0.0 && curT < tb
@@ -45,6 +45,16 @@ function [Coll tf raf vaf rbf vbf] = Devoir3(rai, vai, rbi, vbi, tb, name = "Gra
       if risqueCollision(qas(3:4), qbs(3:4))
         [collision pointCollision normale] = enCollision(qas(3:4)', rota, qbs(3:4)', rotb);
       endif
+    endif
+    
+    if norm(qas(1:2)) < 0.01
+      qas(1) = 0;
+      qas(2) = 0;
+    endif
+    
+    if norm(qbs(1:2)) < 0.01
+      qbs(1) = 0;
+      qbs(2) = 0;
     endif
   endwhile
   
