@@ -26,14 +26,14 @@ function [Coll tf raf vaf rbf vbf] = Devoir3(rai, vai, rbi, vbi, tb, name = "Gra
   curT = 0.0;
   
   while ((norm(qas(1:2)) > 0.01 || norm(qbs(1:2)) > 0.01) && not(collision))
-    
+  #while ((curT < tb) && not(collision))
+    # Pas de collision déterminée expérimentalement dans cette section
     if tb > 0.0 && curT < tb
       [deltaT qas] = SEDRK4t0E(qas, curT, curT + deltaT, wa0, epsilon, @gfrt, a.masse);
       rota = rota + wa0*tb;
       qbs = qbs+gcst(qbs)*tb;
       # L'auto b ne tourne pas encore sur elle-même.
-      curT = tb;
-      # Vérifier s'il y a eu potentielle collision, sinon la boucle va continuer normalement.
+      curT = tb;      
     else
       [dta qas] = SEDRK4t0E(qas, curT, curT + deltaT, wa0, epsilon, @gfrt, a.masse);
       [dtb qbs] = SEDRK4t0E(qbs, curT, curT + deltaT, wb0, epsilon, @gfrt, b.masse);
@@ -42,6 +42,9 @@ function [Coll tf raf vaf rbf vbf] = Devoir3(rai, vai, rbi, vbi, tb, name = "Gra
       rota = rota + wa0*deltaT;
       rotb = rotb + wb0*deltaT;
       # Vérifier s'il y a eu potentielle collision, sinon la boucle va continuer normalement.
+      if risqueCollision(qas(3:4), qbs(3:4))
+        [collision pointCollision normale] = enCollision(qas(3:4)', rota, qbs(3:4)', rotb);
+      endif
     endif
   endwhile
   
