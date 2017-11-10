@@ -41,7 +41,7 @@ function Simulation()
   0.0;
   1.0];
   
-  for sim = 6:6
+  for sim = 1:6
     name = strcat(" Sim ", num2str(sim));
     [Coll tf raf vaf rbf vbf] = Devoir3(rai(sim,:), vai(sim,:), rbi(sim,:), vbi(sim,:), tb(sim,:), name);
     display(Coll);
