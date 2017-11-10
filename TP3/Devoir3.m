@@ -14,8 +14,8 @@ function [Coll tf raf vaf rbf vbf] = Devoir3(rai, vai, rbi, vbi, tb, name = "Gra
   qbs = qb0;
   wa0 = vai(3);
   wb0 = vbi(3);
-  rota0 = atan2(vai(2), vai(1));
-  rotb0 = atan2(vbi(2), vbi(1));
+  rota0 = atan2(vai(2), vai(1))
+  rotb0 = atan2(vbi(2), vbi(1))
   rota = rota0;
   rotb = rotb0;
   
@@ -25,22 +25,41 @@ function [Coll tf raf vaf rbf vbf] = Devoir3(rai, vai, rbi, vbi, tb, name = "Gra
   deltaT = 0.1;
   curT = 0.0;
   
+  recA = [-a.long/2 -a.larg/2; a.long/2 -a.larg/2; a.long/2 a.larg/2; -a.long/2 a.larg/2];
+  recB = [-b.long/2 -b.larg/2; b.long/2 -b.larg/2; b.long/2 b.larg/2; -b.long/2 b.larg/2];
+  faceA = [1 2 3 4];
+  faceB = [1 2 3 4];
+  axis([0,100,0,100]);
+  view(2);
+  grid on;
+  
+  itr = 0;
+  patch('Faces',faceA,'Vertices',R(recA, rota)+qas(3:4),'EdgeColor',"blue",'FaceColor',"none",'LineWidth',2);
+  patch('Faces',faceB,'Vertices',R(recB, rotb)+qbs(3:4),'EdgeColor',"red",'FaceColor',"none",'LineWidth',2);
+  
   while ((norm(qas(1:2)) >= 0.01 || norm(qbs(1:2)) >= 0.01) && not(collision))
   #while ((curT < tb) && not(collision))
     # Pas de collision déterminée expérimentalement dans cette section
     if tb > 0.0 && curT < tb
-      [deltaT qas] = SEDRK4t0E(qas, curT, curT + deltaT, wa0, epsilon, @gfrt, a.masse);
+      [deltaT qas] = SEDRK4t0E(qas, curT, curT + tb, wa0, epsilon, @gfrt, a.masse);
       rota = rota + wa0*tb;
       qbs = qbs+gcst(qbs)*tb;
       # L'auto b ne tourne pas encore sur elle-même.
-      curT = tb;      
+      curT = tb;
+      patch('Faces',faceA,'Vertices',R(recA, rota)+qas(3:4),'EdgeColor',"blue",'FaceColor',"none",'LineWidth',2);
+      patch('Faces',faceB,'Vertices',R(recB, rotb)+qbs(3:4),'EdgeColor',"red",'FaceColor',"none",'LineWidth',2); 
     else
       [dta qas] = SEDRK4t0E(qas, curT, curT + deltaT, wa0, epsilon, @gfrt, a.masse);
       [dtb qbs] = SEDRK4t0E(qbs, curT, curT + deltaT, wb0, epsilon, @gfrt, b.masse);
       curT = curT + deltaT;
-      deltaT = min(dta, dtb);
       rota = rota + wa0*deltaT;
       rotb = rotb + wb0*deltaT;
+      deltaT = min(dta, dtb);
+      if mod(itr, 500) == 0
+        patch('Faces',faceA,'Vertices',R(recA, rota)+qas(3:4),'EdgeColor',"blue",'FaceColor',"none",'LineWidth',2);
+        patch('Faces',faceB,'Vertices',R(recB, rotb)+qbs(3:4),'EdgeColor',"red",'FaceColor',"none",'LineWidth',2);
+      endif
+      itr = itr + 1;
       # Vérifier s'il y a eu potentielle collision, sinon la boucle va continuer normalement.
       if risqueCollision(qas(3:4), qbs(3:4))
         [collision pointCollision normale] = enCollision(qas(3:4)', rota, qbs(3:4)', rotb);
@@ -59,14 +78,14 @@ function [Coll tf raf vaf rbf vbf] = Devoir3(rai, vai, rbi, vbi, tb, name = "Gra
   endwhile
   
   if collision
-    [vaf vbf waf wbf] = resCollision(qas, qbs, wa0, wb0, normale, pointCollision);
+    [vaf vbf] = resCollision(qas, qbs, wa0, wb0, normale, pointCollision);
   else
-    vaf = [qas(1:2) wa0];
-    vbf = [qbs(1:2) wb0];
+    vaf = [qas(1:2)'; wa0];
+    vbf = [qbs(1:2)'; wb0];
   endif 
   
-  raf = [qas(3:4) rota];
-  rbf = [qbs(3:4) rotb];
+  raf = [qas(3:4) mod(rota,2*pi)];
+  rbf = [qbs(3:4) mod(rotb,2*pi)];
   Coll = not(collision);
   tf = curT;
   dessinerGraphique(constantes, [rai; raf(1:2); rbi; rbf(1:2)], [rota0 rota rotb0 rotb], 'MASTRING');
