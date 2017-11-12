@@ -1,7 +1,8 @@
-function [estEnCollision coinEnCollision surfaceEnCollision] = enCollision(posCentreAutoA, orientationXYAutoA, posCentreAutoB, orientationXYAutoB)
+function [estEnCollision coinEnCollision surfaceEnCollision aRecalculer] = enCollision(posCentreAutoA, orientationXYAutoA, posCentreAutoB, orientationXYAutoB)
   constantes = defConstantes();
   coinEnCollision = -1;
   surfaceEnCollision = -1;
+  aRecalculer = true;
     
   #     4____(3)__3
   #     |         | 
@@ -36,30 +37,22 @@ function [estEnCollision coinEnCollision surfaceEnCollision] = enCollision(posCe
   
   # S'il y a une surface de B dont tous les coins de A sont au dessus (d > 0), il y a un plan de division, donc pas de collision
   # i.e un col dont tous les d(i,j,k) > 0
-  #display(coinsASurfaceB);
-  #display((all(coinsASurfaceB > 0, 1)));
   if any(all(coinsASurfaceB > 0, 1) > 0)
     estEnCollision = false;
-    #display("Aucun coin A est en collision avec surface B qq");
     return;
   endif
   
   # Verifier s'il y a un coin de A en dessous de tous les plans de B (d <0)
-  #display("Verifier si un coin de A en dessous de tous els plans de B");
   for row=1:size(coinsASurfaceB, 1)
-    #display(all(coinsASurfaceB(row,:) < 0));
     if all(coinsASurfaceB(row,:) < 0)
-      #display(strcat("Coin A" , num2str(row) , " en collision avec une surface B"));
       estEnCollision = true;
       autoEnCollision = 1; # 1 pour A
       coinEnCollision = coinsTransA(:,row); # le numéro du coin de auto A
       # Determiner la surface de collision
       for col = 1:size(coinsASurfaceB, 2)
-        #display(nnz(coinsASurfaceB(:, col) > 0));
         if nnz(coinsASurfaceB(:, col) > 0) == 3 # les 3 autres coins de A sont au-dessus de surface col de B
           surfaceEnCollision = -normalesB(:,col);
-          display(strcat("Coin A" , num2str(row) , " en collision avec une surface B",  num2str(col)));
-          display(coinsASurfaceB(row, col));
+          aRecalculer = abs(coinsASurfaceB(row, col)) > 0.01;
           return;
         endif      
       endfor 
@@ -70,36 +63,29 @@ function [estEnCollision coinEnCollision surfaceEnCollision] = enCollision(posCe
   
   # S'il y a une surface de A dont tous les coins de B sont au dessus (d > 0), il y a un plan de division, donc pas de collision
   # i.e un col dont tous les d(i,j,k) > 0
-  #display(coinsBSurfaceA); 
-  #display((all(coinsBSurfaceA > 0, 1)));
   if any(all(coinsBSurfaceA > 0, 1) > 0)
     estEnCollision = false;
-        #display("Aucun coin B est en collision avec surface A qq");
     return;
   endif
   
-  
   # Verifier s'il y a un coin de B en dessous de tous les plans de A (d < 0)
-  #display("Verifier si un coin de B en dessous de tous les plans de A");
   for row=1:size(coinsBSurfaceA, 1)
-    #display(all(coinsBSurfaceA(row,:) < 0));
     if all(coinsBSurfaceA(row,:) < 0)
-      #display(strcat("Coin B", num2str(row), " en collision avec une surface A"));
       estEnCollision = true;
       autoEnCollision = 2; # 1 pour A
       coinEnCollision = coinsTransB(:,row); # le numéro du coin de auto B
       # Determiner la surface de collision
       for col = 1:size(coinsBSurfaceA, 2)
-        #display(nnz(coinsBSurfaceA(:, col) > 0));
         if nnz(coinsBSurfaceA(:, col) > 0) == 3 # les 3 autres coins de B sont au-dessus de surface col de A
           surfaceEnCollision = -normalesA(:,col);
-          display(coinsBSurfaceA(row, col));
-          display(strcat("Coin B" , num2str(row) , " en collision avec une surface A", num2str(col)));
+          aRecalculer = abs(coinsBSurfaceA(row, col)) > 0.01;
           return;
         endif      
       endfor 
     endif
   endfor
+  
+  
    
 endfunction
 

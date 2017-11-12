@@ -1,4 +1,4 @@
-function [DeltaT qs] = SEDRK4t0E(q0, t0, tf, w0, epsilon, g, masse)
+function qs = SEDRK4t0E(q0, t0, tf, w0, epsilon, g, masse)
   % Contrôle d’ erreur pour solution ED 
   % Equation a resoudre : dq/dt=g(q,t)
   % avec
