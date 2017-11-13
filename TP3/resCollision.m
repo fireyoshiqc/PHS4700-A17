@@ -10,7 +10,7 @@ function [vaf vbf] = resCollision(qai, qbi, wai, wbi, normale, pointCollision)
   vr = dot([normale; 0], (vap-vbp));
 
   Ia = (a.masse/12)*(a.long^2+a.larg^2);
-  Ib = (b.masse/12)*(b.long^2+b.long^2);
+  Ib = (b.masse/12)*(b.long^2+b.larg^2);
   
   Ga = dot([normale; 0], cross((1/Ia)*(cross(rap, [normale; 0])), rap));
   Gb = dot([normale; 0], cross((1/Ib)*(cross(rbp, [normale; 0])), rbp));
