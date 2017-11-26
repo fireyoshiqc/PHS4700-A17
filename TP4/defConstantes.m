@@ -52,6 +52,5 @@ constantes = struct(
       'couleur', [1;0;1]
     )
   )
-  )
 );
 endfunction
