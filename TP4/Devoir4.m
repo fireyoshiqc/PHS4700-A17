@@ -15,7 +15,7 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Graphique de la tra
   if (poso(3) < 2)
     angleAzimutalFinal = atan((sqrt(4^2+4^2)+R)/(rc(3)-h/2-poso(3)))
   else
-    angleAzimutalFinal = atan((sqrt(4^2+4^2)-R)/(pi+rc(3)-h/2-poso(3)))
+    angleAzimutalFinal = pi+atan((sqrt(4^2+4^2)-R)/(rc(3)-h/2-poso(3)))
   end
   
   nAnglesPolaire = 0;
