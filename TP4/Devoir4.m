@@ -2,14 +2,22 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Graphique de la tra
   format short g
   
   constantes = defConstantes();
+  R = constantes.cylindre.rayon;
+  rc = constantes.cylindre.centre;
+  h = constantes.cylindre.hauteur;
   
   #[s,t]=resoudreRayonCylindre(constantes, [0 0 5], [1, 1]/norm([1,1]))
   
-%  # Angles en radians (put into the constants file)
-%  anglePolaireInitial = 0
-%  anglePolaireFinal = pi/2
-%  angleAzimutalInitial = 
-%  angleAzimutalFinal = 
+  # Angles en radians (put into the constants file)
+  
+  anglePolaireInitial = atan((4+2*sin(10*pi/6))/(4+2*cos(10*pi/6)))
+  anglePolaireFinal = atan((4+2*sin(5*pi/6))/(4+2*cos(5*pi/6)))
+  angleAzimutalInitial = atan((sqrt(4^2+4^2)-R)/(rc(3)+h/2-poso(3)))
+  if (poso(3) < 2)
+    angleAzimutalFinal = atan((sqrt(4^2+4^2)+R)/(rc(3)-h/2-poso(3)))
+  else
+    angleAzimutalFinal = atan((sqrt(4^2+4^2)-R)/(pi+rc(3)-h/2-poso(3)))
+  end
 %  
 %  nAnglesPolaire = 
 %  nAnglesAzimutal = 
@@ -31,26 +39,26 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Graphique de la tra
 %      
 %      
 %      #for ()
-
-
-  % Calculs initiaux avant l'entree dans le cylindre
-  
-  v = [4+2*cos(5*pi/6), 4+2*sin(5*pi/6)]/norm([4+2*cos(5*pi/6), 4+2*sin(5*pi/6)])
-  f = @(params) resoudreRayonCylindre(params, constantes, [0 0 5], v);
-  [x, fval, exitflag] = fsolve(f, [0,0])
-  s = x(0);
-  zst = poso+dInit*s;
-  rc = constantes.cylindre.centre;
-  h = constantes.cylindre.hauteur;
-  if (exitflag == 1 && zst(3) >= rc(3)-h/2 && zst(3) <= rc(3)+h/2)
-    %collision valide avec le rayon du cylindre
-  else
-    %verifier avec le haut et le bas du cylindre
-    s = resoudreHautBasCylindre(constantes, poso, dInit);
-    if (s > 1000000) % Valeur arbitraire pour dire que le rayon n'a pas frappe le cylindre
-      % Discarder le rayon, ne devrait pas arriver si on choisit bien nos angles
-    endif
-  endif
+%
+%
+%  % Calculs initiaux avant l'entree dans le cylindre
+%  
+%  v = [4+2*cos(5*pi/6), 4+2*sin(5*pi/6)]/norm([4+2*cos(5*pi/6), 4+2*sin(5*pi/6)])
+%  f = @(params) resoudreRayonCylindre(params, constantes, [0 0 5], v);
+%  [x, fval, exitflag] = fsolve(f, [0,0])
+%  s = x(0);
+%  zst = poso+dInit*s;
+%  rc = constantes.cylindre.centre;
+%  h = constantes.cylindre.hauteur;
+%  if (exitflag == 1 && zst(3) >= rc(3)-h/2 && zst(3) <= rc(3)+h/2)
+%    %collision valide avec le rayon du cylindre
+%  else
+%    %verifier avec le haut et le bas du cylindre
+%    s = resoudreHautBasCylindre(constantes, poso, dInit);
+%    if (s > 1000000) % Valeur arbitraire pour dire que le rayon n'a pas frappe le cylindre
+%      % Discarder le rayon, ne devrait pas arriver si on choisit bien nos angles
+%    endif
+%  endif
       
       
 endfunction
@@ -77,17 +85,20 @@ function s = resoudreHautBasCylindre(constantes, r0, u)
   R = constantes.cylindre.rayon;
   rc = constantes.cylindre.centre;
   h = constantes.cylindre.hauteur;
-  shaut = (rc(3)+h/2-r0(3))/u(3);
-  sbas = (rc(3)-h/2-r0(3))/u(3);
   s = Inf;
-  if (shaut >= 0 && ((r0+s*u)-(rc+[0;0;h/2])) <= R)
-    % Collision valide avec le haut du cylindre
-    s = min(s, shaut);
+  if (u(3)!=0)
+    shaut = (rc(3)+h/2-r0(3))/u(3);
+    sbas = (rc(3)-h/2-r0(3))/u(3); 
+    if (shaut >= 0 && ((r0+s*u)-(rc+[0;0;h/2])) <= R)
+      % Collision valide avec le haut du cylindre
+      s = min(s, shaut);
+    endif
+    if (sbas >= 0 && ((r0+s*u)-(rc-[0;0;h/2])) <= R)
+      % Collision valide avec le bas du cylindre
+      s = min(s, sbas);
+    endif
   endif
-  if (sbas >= 0 && ((r0+s*u)-(rc-[0;0;h/2])) <= R)
-    % Collision valide avec le bas du cylindre
-    s = min(s, sbas);
-  endif
+  
 endfunction
 
 function dessinerGraphique(constantes, positions, rotations, name)
