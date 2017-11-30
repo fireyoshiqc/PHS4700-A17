@@ -76,7 +76,7 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
       
       # Si le rayon touche au cylindre
       posObservateur = poso;
-      pointIntersection = zst;
+      pointIntersection = [zst(1), zst(2), zst(3)];  # TODO Just do transpose of the vertical vector instead?
       distanceParcourue = norm(pointIntersection - posObservateur);
       
       #TODO Add collision logic for top and bottom

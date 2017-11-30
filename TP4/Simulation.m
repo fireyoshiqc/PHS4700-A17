@@ -14,7 +14,7 @@ function Simulation()
   
   for sim = 1:4
     name = strcat(" Sim ", num2str(sim));
-    [xi yi zi face] = Devoir4 (nout, nin, poso, name);
+    [xi yi zi face] = Devoir4 (nout(sim), nin(sim), poso(sim,:), name);
     display(xi);
     display(yi);
     display(zi);
