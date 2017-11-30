@@ -14,29 +14,32 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
    
   #[s,t]=resoudreRayonCylindre(constantes, [0 0 5], [1, 1]/norm([1,1]))  #TODO Remove?
   
-  # Angles en radians (put into the constants file)
-  anglePolaireInitial = atan((rc(2)+2*sin(10*pi/6))/(rc(1)+2*cos(10*pi/6)))
-  anglePolaireFinal = atan((rc(2)+2*sin(5*pi/6))/(rc(1)+2*cos(5*pi/6)))
-  angleAzimutalInitial = atan((sqrt(rc(1)^2+rc(2)^2)-R)/(rc(3)+h/2-poso(3)))
+  # TODO Put angles into the constants file?
+  # Angle Polaire (theta) : Descend de l'axe des z vers le plan xy
+  # Angle Azimutal (phi) : Augmente dans le sens ccw de l'axe des x positif dans le plan xy
+  # Angles en radians
+  angleAzimutalInitial = atan((rc(2)+2*sin(10*pi/6))/(rc(1)+2*cos(10*pi/6)))
+  angleAzimutalFinal = atan((rc(2)+2*sin(5*pi/6))/(rc(1)+2*cos(5*pi/6)))
+  anglePolaireInitial = atan((sqrt(rc(1)^2+rc(2)^2)-R)/(rc(3)+h/2-poso(3)))
   if (poso(3) < (rc(3)-h/2))
-    angleAzimutalFinal = atan((sqrt(rc(1)^2+rc(2)^2)+R)/(rc(3)-h/2-poso(3)))
+    anglePolaireFinal = atan((sqrt(rc(1)^2+rc(2)^2)+R)/(rc(3)-h/2-poso(3)))
   else
-    angleAzimutalFinal = pi+atan((sqrt(rc(1)^2+rc(2)^2)-R)/(rc(3)-h/2-poso(3)))
+    anglePolaireFinal = pi+atan((sqrt(rc(1)^2+rc(2)^2)-R)/(rc(3)-h/2-poso(3)))
   end
   
-  nAnglesPolaire = 1000;  # TODO Optimize
-  nAnglesAzimutal = 1000;
+  nAnglesAzimutal = 1000;  # TODO Optimize
+  nAnglesPolaire = 1000;
   
-  for nIterPolaire = 1:nAnglesPolaire
-    # Calculer l'angle polaire
-    anglePolaire = anglePolaireInitial + (2*nIterPolaire - 1)(anglePolaireFinal - anglePolaireInitial)/2*nIterPolaire;
+  for nIterAzimutal = 1:nAnglesAzimutal
+    # Calculer l'angle azimutal
+    angleAzimutal = angleAzimutalInitial + (2*nIterAzimutal - 1)(angleAzimutalFinal - angleAzimutalInitial)/2*nIterAzimutal;
     
-    for nIterAzimutal = 1:nAnglesAzimutal
-      # Calculer l'angle azimutal pour l'iteration
-      angleAzimutal = angleAzimutalInitial + (2*nIterAzimutal - 1)(angleAzimutalFinal - angleAzimutalInitial)/2*nIterAzimutal;
+    for nIterPolaire = 1:nAnglesPolaire
+      # Calculer l'angle polaire pour l'iteration
+      anglePolaire = anglePolaireInitial + (2*nIterPolaire - 1)(anglePolaireFinal - anglePolaireInitial)/2*nIterPolaire;
       
       # Calculer le vecteur directeur initial
-      dInit = [sin(anglePolaire)*cos(angleAzimutal), sin(anglePolaire)sin(AngleAzimutal), cos(anglePolaire)];
+      dInit = [sin(anglePolaire)*cos(angleAzimutal), sin(anglePolaire)sin(angleAzimutal), cos(anglePolaire)];
       dInit = dInit/norm(dInit);  
 
       # TODO Put this in a function that returns the collision & what it collided with
