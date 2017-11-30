@@ -27,8 +27,8 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
     anglePolaireFinal = pi+atan((sqrt(rc(1)^2+rc(2)^2)-R)/(rc(3)-h/2-poso(3)))
   end
   
-  nAnglesAzimutal = 1000;  # TODO Optimize
-  nAnglesPolaire = 1000;
+  nAnglesAzimutal = 10;  # TODO Optimize
+  nAnglesPolaire = 10;
   
   for nIterAzimutal = 1:nAnglesAzimutal
     # Calculer l'angle azimutal
@@ -47,7 +47,7 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
       #v = [4+2*cos(5*pi/6), 4+2*sin(5*pi/6), 0]/norm([4+2*cos(5*pi/6), 4+2*sin(5*pi/6), 0])
       v = [1; 1; 0.37]/norm([1; 1; 0.37]);
       f = @(params) resoudreRayonCylindre(params, constantes, poso', v);
-      [x, fval, exitflag] = fsolve(f, [0,0])
+      [x, fval, exitflag] = fsolve(f, [0,0]);
       s = x(1);
       zst = poso'+v*s;  # Point de collision potentiel avec le cote du cylindre
       intersecteAvecCoteCyl = true;
