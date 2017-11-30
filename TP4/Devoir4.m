@@ -184,7 +184,7 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
 endfunction
 
 function estRefl = estReflechie(nInit, nFinal, angleInit)
-  estRefl = (nInit > nFinal) && (angleInit < -abs(arcsin(nFinal/nInit))) && (angleInit > abs(arcsin(nFinal/nInit)));
+  estRefl = (nInit > nFinal) && (angleInit < -abs(asin(nFinal/nInit))) && (angleInit > abs(asin(nFinal/nInit)));
 endfunction
 
 function estTrans = estTransmise(nInit, nFinal, angleInit)
