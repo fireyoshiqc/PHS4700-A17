@@ -50,6 +50,7 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
       [x, fval, exitflag] = fsolve(f, [0,0])
       s = x(1);
       zst = poso'+v*s;  # Point de collision potentiel avec le cote du cylindre
+      intersecteAvecCoteCyl = true;
       if (exitflag == 1 && zst(3) >= rc(3)-h/2 && zst(3) <= rc(3)+h/2)
         # Collision valide avec le rayon du cylindre
         hold on;
@@ -67,6 +68,7 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
         else
           # Collision valide avec le haut ou le bas du cylindre
           zst = poso'+v*s;  # Point de collision avec le cote du cylindre
+          intersecteAvecCoteCyl = false;
           hold on;
           plot3([poso(1);zst(1)], [poso(2);zst(2)], [poso(3);zst(3)]);
           axis square; 
@@ -79,11 +81,22 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
       pointIntersection = [zst(1), zst(2), zst(3)];  # TODO Just do transpose of the vertical vector instead?
       distanceParcourue = norm(pointIntersection - posObservateur);
       
-      #TODO Add collision logic for top and bottom
-      # Determiner la normale d'une surface tangante au cylindre au point d'intersection (i)
-      centreDuCercle = [rc(1), rc(2), pointIntersection(3)];
-      i = (pointIntersection - centreDuCercle);
-      i = i/norm(i);
+      if intersecteAvecCoteCyl
+        # Intersection avec le cote du cylindre
+        # Determiner la normale d'une surface tangante au cylindre au point d'intersection (i)
+        centreDuCercle = [rc(1), rc(2), pointIntersection(3)];
+        i = (pointIntersection - centreDuCercle);
+        i = i/norm(i);    
+      else
+        # Intersection avec le haut ou le bas du cylindre
+        if (pointIntersection(3) > rc(3))
+          # Intersection avec le haut
+          i = [0, 0, 1];  # Normale du haut du cylindre
+        else
+          # Intersection avec le bas
+          i = [0, 0, -1];  # Normale du bas du cylindre
+        endif
+      endif
       
       # TODO Mettre le calcul d'angle d'incidence dans une fonction separee
       # Calculer la normale du plan d'incidence (j)
@@ -117,7 +130,8 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
         
         # Calculer le prochain point d'intersection
         prochainPointIntersection = [0, 0, 0];  # TODO Apply magic courbe parametrique fuckery
-        # TODO Return a variable or something that says what it collided with
+        intersecteAvecCoteCyl = true;  # TODO Change to appropriate value when add intersection logic
+        # TODO Change boolean for indicating what you collided with to an integer? (enum?)
 
         # Calculer la distance parcourue
         distanceParcourue = distanceParcourue + norm(prochainPointIntersection - pointIntersection);
@@ -130,12 +144,22 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
           # (the distance is already accurate & dInit has the initial direction)
           # break;
         
-        #TODO Add collision logic for top and bottom
         # Si le rayon touche au cylindre il faut determiner l'angle d'incidence
-        # Determiner la normale d'une surface tangante au cylindre au point d'intersection (i)
-        centreDuCercle = [constantes.cylindre.centre(1), constantes.cylindre.centre(2), pointIntersection(3)];
-        i = (centreDuCercle - pointIntersection);
-        i = i/norm(i);
+        if intersecteAvecCoteCyl
+          # Determiner la normale d'une surface tangante au cylindre au point d'intersection (i)
+          centreDuCercle = [constantes.cylindre.centre(1), constantes.cylindre.centre(2), pointIntersection(3)];
+          i = (centreDuCercle - pointIntersection);
+          i = i/norm(i);
+        else
+          # Intersection avec le haut ou le bas du cylindre
+          if (pointIntersection(3) > rc(3))
+            # Intersection avec le haut
+            i = [0, 0, 1];  # Normale du haut du cylindre
+          else
+            # Intersection avec le bas
+            i = [0, 0, -1];  # Normale du bas du cylindre
+          endif
+        endif
       
         # Calculer la normale du plan d'incidence (j)
         j = cross(dInit, i);
