@@ -32,14 +32,14 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
   
   for nIterAzimutal = 1:nAnglesAzimutal
     # Calculer l'angle azimutal
-    angleAzimutal = angleAzimutalInitial + (2*nIterAzimutal - 1)(angleAzimutalFinal - angleAzimutalInitial)/2*nIterAzimutal;
+    angleAzimutal = angleAzimutalInitial + (2*nIterAzimutal - 1)*(angleAzimutalFinal - angleAzimutalInitial)/2*nIterAzimutal;
     
     for nIterPolaire = 1:nAnglesPolaire
       # Calculer l'angle polaire pour l'iteration
-      anglePolaire = anglePolaireInitial + (2*nIterPolaire - 1)(anglePolaireFinal - anglePolaireInitial)/2*nIterPolaire;
+      anglePolaire = anglePolaireInitial + (2*nIterPolaire - 1)*(anglePolaireFinal - anglePolaireInitial)/2*nIterPolaire;
       
       # Calculer le vecteur directeur initial
-      dInit = [sin(anglePolaire)*cos(angleAzimutal), sin(anglePolaire)sin(angleAzimutal), cos(anglePolaire)];
+      dInit = [sin(anglePolaire)*cos(angleAzimutal), sin(anglePolaire)*sin(angleAzimutal), cos(anglePolaire)];
       dInit = dInit/norm(dInit);  
 
       # TODO Put this in a function that returns the collision & what it collided with
@@ -63,7 +63,7 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
         if (s > 1000000)  # Valeur arbitraire pour dire que le rayon n'a pas frappe le cylindre
           # Rejeter le rayon, ne devrait pas arriver si on choisit bien nos angles
           display("Ray discarded");
-          continue;
+          continue
         else
           # Collision valide avec le haut ou le bas du cylindre
           zst = poso'+v*s;  # Point de collision avec le cote du cylindre
@@ -101,7 +101,8 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
       if (estReflechie(nLiquide, nCylindre, angleIncidence))
         # Reflexion sur la surface du cylindre (reflexion totale interne du liquide)
         # Le rayon est rejete
-        continue;
+        continue
+      endif
       
       # Calculer la direction refracte du rayon
       # TODO Need to give better variable names
@@ -147,11 +148,15 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
         
         if (estTransmise(nCylindre, nLiquide, angleIncidence))
           # Rejeter le rayon
-          break;
+          break
+        endif
         
         # Si le rayon est reflechie dans le cylindre calculer le prochain vecteur directeur
         dApres = cos(angleIncidence)*i + sin(angleIncidence)*k;
         dApres = dApres/norm(dApres);
+      end
+    end
+  end
 endfunction
 
 function estRefl = estReflechie(nInit, nFinal, angleInit)
