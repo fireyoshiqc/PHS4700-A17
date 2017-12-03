@@ -7,7 +7,7 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
   h = constantes.cylindre.hauteur;
   
   figure('name', name);
-  #set(gca, 'Projection', 'perspective'); 
+  
   [cx, cy, cz] = cylinder();
   surf(2*cx+rc(1), 2*cy+rc(2), h*cz+rc(3)-h/2, 'FaceAlpha', 0)
 
@@ -23,8 +23,8 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
     anglePolaireFinal = pi+atan((sqrt(rc(1)^2+rc(2)^2)-R)/(rc(3)-h/2-poso(3)))
   end
   
-  nAnglesAzimutal = 100;
-  nAnglesPolaire = 100;
+  nAnglesAzimutal = 200;
+  nAnglesPolaire = 200;
   xi = [];
   yi = [];
   zi = [];
@@ -111,8 +111,8 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
       dApres = dApres/norm(dApres);
       #hold on;
       #plot3([poso(1);pointIntersection(1)],
-          #  [poso(2);pointIntersection(2)],
-           # [poso(3);pointIntersection(3)]);
+      #      [poso(2);pointIntersection(2)],
+      #      [poso(3);pointIntersection(3)], 'Color', [0.8, 0.8, 0.8]);
      # hold on;
        # plot3([pointIntersection(1);pointIntersection(1)+i(1)],
         #    [pointIntersection(2);pointIntersection(2)+i(2)],
@@ -146,6 +146,14 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
           zi = [zi; pointDessin(3)];
           ci = [ci; couleur];
           face = [face; numface];
+          #hold on;
+          #plot3([pointIntersection(1);pointIntersection(1)+s*dRayonIncident(1)],
+          #  [pointIntersection(2);pointIntersection(2)+s*dRayonIncident(2)],
+          #  [pointIntersection(3);pointIntersection(3)+s*dRayonIncident(3)], 'Color', [0.8, 0.8, 0.8]);
+          #hold on;
+          #plot3([pointIntersection(1)+s*dRayonIncident(1)],
+          #  [pointIntersection(2)+s*dRayonIncident(2)],
+          #  [pointIntersection(3)+s*dRayonIncident(3)], '*', 'MarkerSize', 10, 'MarkerEdgeColor', couleur);
           break;
         endif
         
@@ -189,6 +197,11 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
             i = [0, 0, 1];  # Normale du bas du cylindre, inverse puisque le rayon est a l'interieur!!
           endif
         endif
+        
+        #hold on;
+        #plot3([pointIntersection(1);prochainPointIntersection(1)],
+        #    [pointIntersection(2);prochainPointIntersection(2)],
+        #    [pointIntersection(3);prochainPointIntersection(3)], 'Color', [0.8, 0.8, 0.8]);
       
         # Calculer la normale du plan d'incidence (j)
         j = cross(dRayonIncident, i);
@@ -201,6 +214,15 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
         
         if (estTransmise(nCylindre, nLiquide, angleIncidence))
           # Rejeter le rayon
+          # TO REMOVE WHEN DONE
+          #angleTransmis = asin((nCylindre/nLiquide)*sin(angleIncidence));
+          #dApres = -i*cos(angleTransmis) + k*sin(angleTransmis);
+          #dApres = dApres/norm(dApres);
+          # TO REMOVE WHEN DONE
+          #hold on;
+          #plot3([prochainPointIntersection(1);prochainPointIntersection(1)+dApres(1)],
+          #  [prochainPointIntersection(2);prochainPointIntersection(2)+dApres(2)],
+          #  [prochainPointIntersection(3);prochainPointIntersection(3)+dApres(3)], 'Color', [0.8, 0.8, 0.8]);
           break;
         endif
         
@@ -220,12 +242,14 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
   scatter3(xi, yi, zi, 200, ci, '.');
   plot3(poso(1),poso(2),poso(3), 'o', 'MarkerEdgeColor', [0 0 0], 'MarkerSize', 20);
   
-  #set(gca, 'CameraViewAngle', 30);
-  #set(gca, 'CameraPosition', poso);
-  #set(gca, 'CameraTarget', [constantes.cylindre.centre(1:2)' poso(3)]);
+  
   axis equal;
   axis([0 6 0 6 0 20]);
   set(gca,'color','none');
+  #set(gca, 'Projection', 'perspective');
+  #set(gca, 'CameraViewAngle', 10);
+  #set(gca, 'CameraPosition', poso);
+  #set(gca, 'CameraTarget', [constantes.cylindre.centre(1:2)' poso(3)]);
   view(3);
   grid on;
   
