@@ -22,8 +22,8 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
     anglePolaireFinal = pi+atan((sqrt(rc(1)^2+rc(2)^2)-R)/(rc(3)-h/2-poso(3)))
   end
   
-  nAnglesAzimutal = 5;
-  nAnglesPolaire = 5;
+  nAnglesAzimutal = 10;
+  nAnglesPolaire = 10;
   xi = [];
   yi = [];
   zi = [];
@@ -52,10 +52,7 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
       pointIntersection = poso+dInit*s;  # Point de collision potentiel avec le cote du cylindre
       intersecteAvecCoteCyl = true;
       if (size(s) == 1 && pointIntersection(3) >= rc(3)-h/2 && pointIntersection(3) <= rc(3)+h/2)
-        # Collision valide avec le rayon du cylindre
-        hold on;
-        plot3([poso(1);pointIntersection(1)], [poso(2);pointIntersection(2)], [poso(3);pointIntersection(3)]);
-        
+        # Collision valide avec le rayon du cylindre        
       else
         # Verifier avec le haut et le bas du cylindre
         s = resoudreHautBasCylindre(constantes, poso', dInit);
@@ -66,8 +63,6 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
           # Collision valide avec le haut ou le bas du cylindre
           pointIntersection = poso+dInit*s;  # Point de collision avec le cote du cylindre
           intersecteAvecCoteCyl = false;
-          hold on;
-          plot3([poso(1);pointIntersection(1)], [poso(2);pointIntersection(2)], [poso(3);pointIntersection(3)]);
         endif
       endif
       
@@ -93,13 +88,11 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
       # Calculer la normale du plan d'incidence (j)
       j = cross(dInit, i);
       j = j/norm(j);
-      #hold on;
-      #plot3([pointIntersection(1);pointIntersection(1)+j(1)], [pointIntersection(2);pointIntersection(2)+j(2)], [pointIntersection(3);pointIntersection(3)+j(3)]);
-      
+
       # Determiner l'angle d'incidence du rayon
       k = cross(i, j);
       k = k/norm(k);
-      angleIncidence = asin(dot(dInit, k));
+      angleIncidence = asin(dot(dInit, k))
       
       # Rejeter le rayon si elle est reflechie par le cylindre
       nLiquide = nout;
@@ -111,9 +104,17 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
       endif
       
       # Calculer la direction refracte du rayon
-      angleTransmis = asin((nLiquide/nCylindre)*sin(angleIncidence));
+      angleTransmis = asin((nLiquide/nCylindre)*sin(angleIncidence))
       dApres = -i*cos(angleTransmis) + k*sin(angleTransmis);
-      dApres = dApres/norm(dApres);
+      dApres = dApres/norm(dApres)
+      hold on;
+      plot3([poso(1);pointIntersection(1)],
+            [poso(2);pointIntersection(2)],
+            [poso(3);pointIntersection(3)]);
+      hold on;
+      plot3([pointIntersection(1);pointIntersection(1)+dApres(1)],
+            [pointIntersection(2);pointIntersection(2)+dApres(2)],
+            [pointIntersection(3);pointIntersection(2)+dApres(3)]);
       
       distanceTotale = s;
       
@@ -131,8 +132,6 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
           zi = [zi; pointDessin(3)];
           ci = [ci; couleur];
           face = [face; numface];
-          hold on;
-          plot3([pointIntersection(1);pointIntersection(1)+s*dRayonIncident(1)], [pointIntersection(2);pointIntersection(2)+s*dRayonIncident(2)], [pointIntersection(3);pointIntersection(3)+s*dRayonIncident(3)]);
           break;
         endif
         
@@ -146,27 +145,19 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
         
         if (size(s) == 1 && prochainPointIntersection(3) >= rc(3)-h/2 && prochainPointIntersection(3) <= rc(3)+h/2)
         # Collision valide avec le rayon du cylindre
-        hold on;
-        plot3([pointIntersection(1);prochainPointIntersection(1)], [pointIntersection(2);prochainPointIntersection(2)], [pointIntersection(3);prochainPointIntersection(3)]);
-      else
-        # Verifier avec le haut et le bas du cylindre
-        s = resoudreHautBasCylindre(constantes, pointIntersection, dRayonIncident);
-        if (s > 1000000)  # Valeur arbitraire pour dire que le rayon n'a pas frappe le cylindre
-          # Rejeter le rayon, ne devrait pas arriver si on choisit bien nos angles
-          #hold on;
-          #plot3([pointIntersection(1);pointIntersection(1)+10*dRayonIncident(1)], [pointIntersection(2);pointIntersection(2)+10*dRayonIncident(2)], [pointIntersection(3);pointIntersection(3)+10*dRayonIncident(3)]);
-          break;
         else
-          # Collision valide avec le haut ou le bas du cylindre
-          prochainPointIntersection = pointIntersection + s*dRayonIncident; # Point de collision avec le cote du cylindre
-          intersecteAvecCoteCyl = false;
-          hold on;
-          plot3([pointIntersection(1);prochainPointIntersection(1)], [pointIntersection(2);prochainPointIntersection(2)], [pointIntersection(3);prochainPointIntersection(3)]);
+          # Verifier avec le haut et le bas du cylindre
+          s = resoudreHautBasCylindre(constantes, pointIntersection, dRayonIncident);
+          if (s > 1000000)  # Valeur arbitraire pour dire que le rayon n'a pas frappe le cylindre
+            # Rejeter le rayon, ne devrait pas arriver si on choisit bien nos angles
+            break;
+          else
+            # Collision valide avec le haut ou le bas du cylindre
+            prochainPointIntersection = pointIntersection + s*dRayonIncident; # Point de collision avec le cote du cylindre
+            intersecteAvecCoteCyl = false;
+          endif
         endif
-      endif
-        # Calculer la distance parcourue
-        distanceTotale += s;
-        pointIntersection = prochainPointIntersection;
+        
         
         # Si le rayon touche au cylindre il faut determiner l'angle d'incidence
         if intersecteAvecCoteCyl
@@ -196,14 +187,17 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
         
         if (estTransmise(nCylindre, nLiquide, angleIncidence))
           # Rejeter le rayon
-          #hold on;
-          #plot3([prochainPointIntersection(1)], [prochainPointIntersection(2)], [prochainPointIntersection(3)], '.', 'MarkerSize', 20);
           break;
         endif
         
         # Si le rayon est reflechie dans le cylindre calculer le prochain vecteur directeur
         dApres = cos(angleIncidence)*i + sin(angleIncidence)*k;
         dApres = dApres/norm(dApres);
+        
+        # Calculer la distance parcourue
+        distanceTotale += s;
+        pointIntersection = prochainPointIntersection;
+        
       end
     end
   end
@@ -219,7 +213,8 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
 endfunction
 
 function estRefl = estReflechie(nInit, nFinal, angleInit)
-  estRefl = (nInit > nFinal) && (angleInit >= -abs(asin(nFinal/nInit))) && (angleInit <= abs(asin(nFinal/nInit)));
+  angleCritique = abs(asin(nFinal/nInit));
+  estRefl = (nInit > nFinal) && ((angleInit < -angleCritique) || (angleInit > angleCritique));
 endfunction
 
 function estTrans = estTransmise(nInit, nFinal, angleInit)
