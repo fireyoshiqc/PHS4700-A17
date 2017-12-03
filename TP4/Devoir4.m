@@ -22,8 +22,8 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
     anglePolaireFinal = pi+atan((sqrt(rc(1)^2+rc(2)^2)-R)/(rc(3)-h/2-poso(3)))
   end
   
-  nAnglesAzimutal = 10;
-  nAnglesPolaire = 10;
+  nAnglesAzimutal = 100;
+  nAnglesPolaire = 100;
   xi = [];
   yi = [];
   zi = [];
@@ -73,6 +73,7 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
         i = (pointIntersection - centreDuCercle);
         i = i/norm(i);
         
+        
       else
         # Intersection avec le haut ou le bas du cylindre
         if (pointIntersection(3) > rc(3))
@@ -92,7 +93,7 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
       # Determiner l'angle d'incidence du rayon
       k = cross(i, j);
       k = k/norm(k);
-      angleIncidence = asin(dot(dInit, k))
+      angleIncidence = asin(dot(dInit, k));
       
       # Rejeter le rayon si elle est reflechie par le cylindre
       nLiquide = nout;
@@ -104,17 +105,29 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
       endif
       
       # Calculer la direction refracte du rayon
-      angleTransmis = asin((nLiquide/nCylindre)*sin(angleIncidence))
+      angleTransmis = asin((nLiquide/nCylindre)*sin(angleIncidence));
       dApres = -i*cos(angleTransmis) + k*sin(angleTransmis);
-      dApres = dApres/norm(dApres)
-      hold on;
-      plot3([poso(1);pointIntersection(1)],
-            [poso(2);pointIntersection(2)],
-            [poso(3);pointIntersection(3)]);
-      hold on;
-      plot3([pointIntersection(1);pointIntersection(1)+dApres(1)],
-            [pointIntersection(2);pointIntersection(2)+dApres(2)],
-            [pointIntersection(3);pointIntersection(2)+dApres(3)]);
+      dApres = dApres/norm(dApres);
+      #hold on;
+      #plot3([poso(1);pointIntersection(1)],
+          #  [poso(2);pointIntersection(2)],
+           # [poso(3);pointIntersection(3)]);
+     # hold on;
+       # plot3([pointIntersection(1);pointIntersection(1)+i(1)],
+        #    [pointIntersection(2);pointIntersection(2)+i(2)],
+         #   [pointIntersection(3);pointIntersection(3)+i(3)]);
+      #hold on;
+      #  plot3([pointIntersection(1);pointIntersection(1)+j(1)],
+        #    [pointIntersection(2);pointIntersection(2)+j(2)],
+          #  [pointIntersection(3);pointIntersection(3)+j(3)]);
+      #hold on;
+       # plot3([pointIntersection(1);pointIntersection(1)+k(1)],
+        #    [pointIntersection(2);pointIntersection(2)+k(2)],
+        #    [pointIntersection(3);pointIntersection(3)+k(3)]);
+      #hold on;
+     # plot3([pointIntersection(1);pointIntersection(1)+dApres(1)],
+          #  [pointIntersection(2);pointIntersection(2)+dApres(2)],
+            #[pointIntersection(3);pointIntersection(3)+dApres(3)]);
       
       distanceTotale = s;
       
