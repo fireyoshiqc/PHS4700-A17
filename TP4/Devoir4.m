@@ -7,8 +7,9 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
   h = constantes.cylindre.hauteur;
   
   figure('name', name);
+  #set(gca, 'Projection', 'perspective'); 
   [cx, cy, cz] = cylinder();
-  surf(2*cx+rc(1), 2*cy+rc(2), h*cz+rc(3)-h/2, 'FaceAlpha', 0.0)
+  surf(2*cx+rc(1), 2*cy+rc(2), h*cz+rc(3)-h/2, 'FaceAlpha', 0)
 
   # Angle Polaire (theta) : Descend de l'axe des z vers le plan xy
   # Angle Azimutal (phi) : Augmente dans le sens ccw de l'axe des x positif dans le plan xy
@@ -217,11 +218,18 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
   
   hold on;
   scatter3(xi, yi, zi, 200, ci, '.');
+  plot3(poso(1),poso(2),poso(3), 'o', 'MarkerEdgeColor', [0 0 0], 'MarkerSize', 20);
+  
+  #set(gca, 'CameraViewAngle', 30);
   #set(gca, 'CameraPosition', poso);
-  #set(gca, 'CameraTarget', constantes.cylindre.centre');
-  axis([0 20 0 20 0 20]); 
+  #set(gca, 'CameraTarget', [constantes.cylindre.centre(1:2)' poso(3)]);
+  axis equal;
+  axis([0 6 0 6 0 20]);
+  set(gca,'color','none');
   view(3);
   grid on;
+  
+  
   
 endfunction
 
@@ -289,10 +297,4 @@ function [sm, color, numface] = resoudrePrisme(constantes, r0, u)
         numface = i;
      endif
   end
-endfunction
-
-function dessinerGraphique(constantes, positions, rotations, name)
-  figure('name', name);
-  view(2);
-  grid on;
 endfunction
