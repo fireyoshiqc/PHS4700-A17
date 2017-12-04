@@ -14,13 +14,13 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
   # Angle Polaire (theta) : Descend de l'axe des z vers le plan xy
   # Angle Azimutal (phi) : Augmente dans le sens ccw de l'axe des x positif dans le plan xy
   # Angles en radians
-  angleAzimutalInitial = atan((rc(2)+2*sin(10*pi/6))/(rc(1)+2*cos(10*pi/6)))
-  angleAzimutalFinal = atan((rc(2)+2*sin(5*pi/6))/(rc(1)+2*cos(5*pi/6)))
-  anglePolaireInitial = atan((sqrt(rc(1)^2+rc(2)^2)-R)/(rc(3)+h/2-poso(3)))
+  angleAzimutalInitial = atan((rc(2)+2*sin(10*pi/6))/(rc(1)+2*cos(10*pi/6)));
+  angleAzimutalFinal = atan((rc(2)+2*sin(5*pi/6))/(rc(1)+2*cos(5*pi/6)));
+  anglePolaireInitial = atan((sqrt(rc(1)^2+rc(2)^2)-R)/(rc(3)+h/2-poso(3)));
   if (poso(3) < (rc(3)-h/2))
-    anglePolaireFinal = atan((sqrt(rc(1)^2+rc(2)^2)+R)/(rc(3)-h/2-poso(3)))
+    anglePolaireFinal = atan((sqrt(rc(1)^2+rc(2)^2)+R)/(rc(3)-h/2-poso(3)));
   else
-    anglePolaireFinal = pi+atan((sqrt(rc(1)^2+rc(2)^2)-R)/(rc(3)-h/2-poso(3)))
+    anglePolaireFinal = pi+atan((sqrt(rc(1)^2+rc(2)^2)-R)/(rc(3)-h/2-poso(3)));
   end
   
   nAnglesAzimutal = 200;
@@ -239,7 +239,7 @@ function [xi yi zi face] = Devoir4 (nout, nin, poso, name = "Rayons")
   end
   
   hold on;
-  scatter3(xi, yi, zi, 200, ci, '.');
+  scatter3(xi, yi, zi, 400, ci, '.');
   plot3(poso(1),poso(2),poso(3), 'o', 'MarkerEdgeColor', [0 0 0], 'MarkerSize', 20);
   
   
